@@ -1,4 +1,4 @@
-// Vehicle templates and per-car handling state for the streets of Costa Vela.
+// Vehicle templates, paint and per-car handling state for the Costa Vela streets.
 export const VEHICLES=[
  {name:'Solana GT',color:'#f06e58',maxSpeed:470,accel:1.04},
  {name:'Marina Classic',color:'#6db9ad',maxSpeed:360,accel:.87},

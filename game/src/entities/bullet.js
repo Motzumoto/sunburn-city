@@ -1,4 +1,4 @@
-// Fast, short-lived projectiles with pooled-friendly plain data records.
+// Fast, short-lived projectile records for weapons, tracers and combat scenes.
 import { WEAPONS } from '../core/config.js';
 export function shoot(player, bullets, random) {
   const weapon=WEAPONS[player.weapon], count=weapon.pellets||1;

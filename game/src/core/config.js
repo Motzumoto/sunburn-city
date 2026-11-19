@@ -1,8 +1,8 @@
-// Shared world and simulation constants for Costa Vela.
+// Shared Costa Vela simulation constants and the sun-bleached street palette.
 export const WIDTH = 4200;
 export const HEIGHT = 4200;
 export const STEP = 1 / 60;
-export const PALETTE = ['#e7cda5', '#d98e79', '#8dc5b5', '#f0d7b6', '#9bb8bb', '#efb7a3'];
+export const PALETTE = ['#d9c39a', '#ef7d63', '#2f8f8f', '#fff0cf', '#1d3340', '#e6a783'];
 export const WEAPONS = [
   { name: 'PISTOL', rate: 0.32, damage: 24, speed: 740, mag: 12, spread: 0.025 },
   { name: 'SMG', rate: 0.09, damage: 13, speed: 760, mag: 30, spread: 0.08 },

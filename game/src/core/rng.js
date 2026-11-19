@@ -1,4 +1,4 @@
-// Small deterministic random source used for the map and screenshot tableaux.
+// Small deterministic random source used for the city and screenshot tableaux.
 export function mulberry32(seed = 1) {
   let state = seed >>> 0;
   return () => {

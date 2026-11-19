@@ -1,4 +1,4 @@
-// SUNBURN CITY boot, state machine, fixed-step simulation and screenshot interface.
+// SUNBURN CITY boot, fixed-step simulation, live entities and screenshot interface.
 import { STEP } from './core/config.js';
 import { mulberry32 } from './core/rng.js';
 import { Input } from './core/input.js';

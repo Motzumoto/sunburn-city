@@ -1,4 +1,4 @@
-// Mission state machine for travel, timed runs, holdouts, tails, chases and heists.
+// Original six-job state machine for travel, holdouts, tails, chases and heists.
 import { MISSIONS } from './data/missions.js';
 export class Missions {
   constructor(progress=0){this.progress=progress;this.active=null;this.elapsed=0;this.stage=0;this.completeBanner=0;this.failed='';}

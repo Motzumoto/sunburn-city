@@ -1,4 +1,4 @@
-// Wanted heat, escalating response stars and Sunspray payoff service.
+// Wanted heat, escalating CVPD response stars and Sunspray payoff service.
 export class Wanted {
   constructor(){this.level=0;this.heat=0;this.cool=0;}
   add(amount=1){this.heat=Math.min(5,this.heat+amount);this.level=Math.min(5,Math.ceil(this.heat));this.cool=0;}

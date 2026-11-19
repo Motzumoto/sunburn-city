@@ -1,4 +1,4 @@
-// SUNBURN CITY is a self-contained offline Canvas game in game/, with original art and sound.
+// SUNBURN CITY dossier entry: offline Canvas game, original coastal art and synthesized sound.
 // This entry plumbing copies the game and its four Costa Vela screenshot scenes, then writes the
 // make.fun dossier summary. Run it with `MAKEFUN_OUTPUT_DIR=out node main.ts`.
 //

@@ -1,4 +1,4 @@
-// Lightweight uniform spatial index for nearby collision and visibility queries.
+// Lightweight uniform spatial index for collisions and camera-visible neighborhoods.
 export class SpatialHash {
   constructor(size = 180) { this.size = size; this.cells = new Map(); }
   clear() { this.cells.clear(); }

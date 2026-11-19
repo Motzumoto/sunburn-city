@@ -1,4 +1,4 @@
-// Reusable street trees, palms, rooftop details, umbrellas and waterfront clutter.
+// Reusable palms, rooftop details, beach umbrellas and waterfront greenery.
 export function makeProps(blocks, random) {
   const props = [];
   for (let i = 0; i < 430; i++) {

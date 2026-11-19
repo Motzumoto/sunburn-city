@@ -1,4 +1,4 @@
-// Seeds Costa Vela's road plan, buildings, waterfront and discoverable landmarks.
+// Seeds Costa Vela's road plan, buildings, palms and discoverable landmarks.
 import { mulberry32 } from '../core/rng.js';
 import { makeBlocks } from './blocks.js';
 import { makeProps } from './props.js';

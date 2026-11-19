@@ -1,4 +1,4 @@
-// Named neighborhood regions and their distinct architectural moods.
+// Named Costa Vela neighborhoods and their distinct architectural moods.
 export const DISTRICTS = [
   { name: 'DOWNTOWN', x: 900, y: 450, w: 1320, h: 1150, color: '#91b7b3', style: 'glass' },
   { name: 'MARINA', x: 2500, y: 350, w: 1450, h: 1050, color: '#8ec6b5', style: 'deco' },

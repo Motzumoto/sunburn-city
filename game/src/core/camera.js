@@ -1,4 +1,4 @@
-// Smooth world camera with gentle look-ahead, contextual zoom and bounded shake.
+// Smooth world camera with gentle look-ahead, staged-shot zoom and bounded shake.
 export class Camera {
   constructor() { this.x = 2100; this.y = 2100; this.zoom = 1; this.shake = 0; }
   update(target, aim, driving, dt) {

@@ -1,2 +1,8 @@
-// Time-of-day color ramps shared by the world and atmospheric lighting pass.
-export function lightAt(hour){const t=((hour%24)+24)%24; if(t<6||t>20)return{wash:'rgba(8,21,49,.46)',sky:'#263c61',glow:.55};if(t<8)return{wash:'rgba(247,133,91,.18)',sky:'#eea37e',glow:.9};if(t>17)return{wash:'rgba(246,139,92,.2)',sky:'#e8a077',glow:.9};return{wash:'rgba(247,220,163,.04)',sky:'#8bc4c1',glow:.2};}
+// Costa Vela's warm golden-hour and cool midnight color ramps.
+export const COLORS={sand:'#d9c39a',coral:'#ef7d63',teal:'#2f8f8f',shadow:'#1d3340',cream:'#fff0cf',road:'#363c42',sea:'#39aeb0'};
+export function lightAt(hour){
+  const t=((hour%24)+24)%24;
+  if(t<5||t>20)return{wash:'rgba(12,24,46,.30)',sky:'#1d3340',glow:.68,warm:'#ffb56e',cool:'#5a8dd4'};
+  if(t<8||t>17)return{wash:'rgba(239,125,99,.17)',sky:'#edaa83',glow:.84,warm:'#ffd095',cool:'#74b9bd'};
+  return{wash:'rgba(255,240,207,.045)',sky:'#9bc7bf',glow:.2,warm:'#fff0cf',cool:'#65aeb1'};
+}

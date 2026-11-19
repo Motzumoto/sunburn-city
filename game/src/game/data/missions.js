@@ -1,4 +1,4 @@
-// Six original jobs follow the Coral Syndicate's rise and unraveling.
+// Six original Costa Vela jobs follow the Coral Syndicate's rise and unraveling.
 export const MISSIONS=[
  {title:'A LITTLE SUNSHINE',type:'marker',brief:'Fixer Marisol Vale needs a quiet favor. Meet her beneath the palms at Cassia and 8th.',target:{x:1810,y:2520},reward:900},
  {title:'HOT CARGO',type:'delivery',brief:'Nico has borrowed a delivery van. Get the package to Pier 9 before the tide turns.',target:{x:3370,y:3525},reward:1450,time:75},

@@ -1,4 +1,4 @@
-// Deterministic building footprints and signature rooftops arranged between avenues.
+// Deterministic footprints for Costa Vela's facades, plazas and signature rooftops.
 import { DISTRICTS } from './districts.js';
 import { ROAD_X, ROAD_Y } from './roads.js';
 export function makeBlocks(random) {

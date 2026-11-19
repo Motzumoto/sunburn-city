@@ -1,4 +1,4 @@
-// Converts keyboard and pointer events into a compact, frame-readable control state.
+// Frame-readable keyboard and pointer controls for walking, driving and aiming.
 export class Input {
   constructor(canvas) {
     this.keys = new Set(); this.pressed = new Set(); this.mouse = { x: 0, y: 0, down: false, clicked: false, wheel: 0 };

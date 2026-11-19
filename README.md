@@ -4,7 +4,7 @@
 [![rank](https://make.fun/badge/gta6-01/Motzumoto/sunburn-city/rank.svg)](https://make.fun/bounty/gta6-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
 [![reward](https://make.fun/badge/gta6-01/Motzumoto/sunburn-city/reward.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
 
-An original top-down open-world crime game set in Costa Vela: walk the boulevards and the boardwalk, steal any car, outrun a rising wanted level, and play six jobs from a fixer, all drawn on Canvas with locally generated art and sound.
+An original top-down open-world crime game set in Costa Vela: walk the sun-bleached boulevards and the boardwalk, steal any car, outrun a rising wanted level, and play six jobs from a fixer. Facades, palms, street life and the full soundtrack are drawn or synthesized locally.
 
 ## Run it
 
@@ -24,7 +24,7 @@ Then open http://localhost:8080. Serving `game/` as the static web root and open
 
 ### Screenshots
 
-`shots.json` lists four deterministic scenes (`city`, `chase`, `mission`, `heist`), each selectable with `?shot=<name>&seed=1`.
+`shots.json` lists four deterministic scenes (`city`, `chase`, `mission`, `heist`): South Beach at golden hour, a Neon Row pursuit, a Pier 9 meeting and the Vela Tower heist. Select any scene with `?shot=<name>&seed=1`.
 
 ---
 

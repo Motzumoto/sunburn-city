@@ -1,4 +1,4 @@
-// Fixed-step animation loop with bounded catch-up after a stalled browser frame.
+// Fixed-step 60 Hz simulation loop with bounded catch-up after a stalled frame.
 export function startLoop(update, render, step = 1 / 60) {
   let previous = performance.now(), carry = 0;
   function frame(now) {

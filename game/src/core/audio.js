@@ -1,4 +1,4 @@
-// Gesture-activated WebAudio sound bed; all tones are synthesized locally.
+// Gesture-activated WebAudio sound bed; all Costa Vela tones are synthesized locally.
 export class AudioEngine {
   constructor() { this.context = null; this.master = null; this.started = false; this.muted = false; this.volume = 0.35; this.stationTimer = 0; this.stationStep = 0; }
   start() {

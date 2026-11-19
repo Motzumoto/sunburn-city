@@ -1,4 +1,4 @@
-// Irregular avenues, side streets and landmark labels for the navigable street grid.
+// Irregular avenues, South Beach boulevards and landmark labels for Costa Vela.
 export const ROAD_X = [115, 465, 815, 1165, 1515, 1865, 2215, 2565, 2915, 3265, 3615, 3965];
 export const ROAD_Y = [130, 460, 805, 1150, 1495, 1840, 2185, 2530, 2875, 3220, 3565, 3910];
 export const STREETS = [

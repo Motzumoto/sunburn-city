@@ -1,4 +1,4 @@
-// Circular local map with roads, nearby blips, player bearing and an N compass.
+// Circular Costa Vela map with roads, nearby blips, player bearing and compass.
 import { ROAD_X, ROAD_Y } from '../world/roads.js';
 export function drawMinimap(ctx,player,cars,peds,width,police=[],mission=null){
   const x=width-105,y=112,r=77;ctx.save();ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.clip();ctx.fillStyle='#529a91';ctx.fillRect(x-r,y-r,r*2,r*2);

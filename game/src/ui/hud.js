@@ -1,4 +1,4 @@
-// Compact premium HUD: cash, health, ammo, objective, clock, radio and wanted stars.
+// Compact coastal HUD: cash, health, ammo, objective, clock, radio and wanted stars.
 import { WEAPONS } from '../core/config.js';
 import { objectiveText } from '../game/objectives.js';
 import { drawMinimap } from './minimap.js';
