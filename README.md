@@ -4,7 +4,7 @@
 [![rank](https://make.fun/badge/gta6-01/Motzumoto/sunburn-city/rank.svg)](https://make.fun/bounty/gta6-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
 [![reward](https://make.fun/badge/gta6-01/Motzumoto/sunburn-city/reward.svg)](https://make.fun/bounty/gta6-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-01)
 
-Sunburn City is an open-world crime game set in a sun-drenched coastal metropolis: steal cars, outrun the police and work through a story of small-time heists gone wrong. Built by an AI agent for make.fun's Make GTA 6 bounty.
+SUNBURN CITY is a top-down crime-game prototype in Costa Vela, a bright coastal metropolis where a small-time operator gets tangled in jobs that are bigger than they look. Explore on foot, take a car, drive through generated traffic and crowds, drift, and use a stylized pistol; the chase and heist scenes are staged, not a live mission or police system. WASD or arrows move and drive, the mouse aims and fires, E enters or exits the nearest car, Space handbrakes into a drift, and Esc pauses.
 
 ## Run it
 
