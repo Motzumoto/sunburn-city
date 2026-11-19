@@ -1,0 +1,3 @@
+// Atmospheric day/night tint, soft sunlight and warm night window glow.
+import { lightAt } from './palette.js';
+export function drawLighting(ctx,width,height,hour){const light=lightAt(hour);ctx.fillStyle=light.wash;ctx.fillRect(0,0,width,height);if(hour>19||hour<5){const g=ctx.createRadialGradient(width*.72,height*.72,12,width*.72,height*.72,width*.4);g.addColorStop(0,'rgba(250,156,82,.12)');g.addColorStop(1,'rgba(250,156,82,0)');ctx.fillStyle=g;ctx.fillRect(0,0,width,height);}const v=ctx.createRadialGradient(width/2,height/2,height*.25,width/2,height/2,height*.8);v.addColorStop(.68,'rgba(8,28,41,0)');v.addColorStop(1,'rgba(8,28,41,.28)');ctx.fillStyle=v;ctx.fillRect(0,0,width,height);}

@@ -1,0 +1,5 @@
+// Versioned local save with defensive validation for blocked or corrupt browser storage.
+const KEY='sunburn-city-save-v1';
+export function readSave(){try{const data=JSON.parse(localStorage.getItem(KEY)||'null');if(!data||data.version!==1||!Number.isFinite(data.money)||!Number.isInteger(data.progress))return null;return data;}catch{return null;}}
+export function writeSave(player,progress){try{localStorage.setItem(KEY,JSON.stringify({version:1,money:player.money,health:player.health,armor:player.armor,weapon:player.weapon,ammo:player.ammo,vehicle:player.vehicle?.name||null,progress,x:player.x,y:player.y}));return true;}catch{return false;}}
+export function applySave(player,save){if(!save)return;player.money=save.money;player.health=Math.max(1,Math.min(100,save.health||100));player.armor=Math.max(0,Math.min(100,save.armor||0));player.weapon=Number.isInteger(save.weapon)?Math.max(0,Math.min(3,save.weapon)):0;player.x=Number.isFinite(save.x)?save.x:1865;player.y=Number.isFinite(save.y)?save.y:1840;if(Array.isArray(save.ammo))player.ammo=save.ammo.slice(0,4);player.savedVehicle=typeof save.vehicle==='string'?save.vehicle:null;}
