@@ -1,4 +1,4 @@
-// SUNBURN CITY - Draws character portraits and dialogue cards.
+// SUNBURN CITY — Draws character portraits and dialogue cards.
 // Draws character portraits and dialogue cards for missions and the opening story.
 import { FONT_STACK, DISPLAY_STACK } from '../core/config.js';
 import { roundRectPath } from '../render/palette.js';

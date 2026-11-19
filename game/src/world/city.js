@@ -1,4 +1,4 @@
-// SUNBURN CITY - Owns generated Costa Vela roads, buildings and queries.
+// SUNBURN CITY — Owns generated Costa Vela roads, buildings and queries.
 // The generated Costa Vela city owns roads, buildings, props, parked cars and spatial queries.
 import { WORLD_SIZE, GROUND, SIDEWALK_W } from '../core/config.js';
 import { Random } from '../core/rng.js';

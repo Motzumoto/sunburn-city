@@ -1,4 +1,4 @@
-// SUNBURN CITY - Synthesizes offline sound effects.
+// SUNBURN CITY — Synthesizes offline sound effects.
 // Synthesized effects keep the game self-contained and offline.
 export function createSfx(context, output) {
   let engine = null;

@@ -1,4 +1,4 @@
-// SUNBURN CITY - Finished, offline top-down open-world crime game set in 1986 Costa Vela.
+// SUNBURN CITY — Finished, offline top-down open-world crime game set in 1986 Costa Vela.
 // This Node 22 build copies game/ and any local screenshots/ to the output directory, then
 // writes dossier.json with the vendored make.fun helper. The game itself is vanilla ES modules
 // and Canvas 2D, with no network or third-party runtime libraries.

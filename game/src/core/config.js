@@ -1,4 +1,4 @@
-// SUNBURN CITY - Defines shared world, timing, lighting and extrusion constants.
+// SUNBURN CITY — Defines shared world, timing, lighting and extrusion constants.
 // Global tuning constants: world size, fixed timestep, warm sun direction and building extrusion.
 
 export const WORLD_SIZE = 5000;

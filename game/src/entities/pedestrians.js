@@ -1,4 +1,4 @@
-// SUNBURN CITY - Spawns and updates sidewalk crowds and pedestrians.
+// SUNBURN CITY — Spawns and updates sidewalk crowds and pedestrians.
 // Sidewalk crowds, beachgoers, idle pairs and deterministic scene-ready pedestrians.
 import { mulberry32 } from '../core/rng.js';
 import { dist } from '../core/math.js';

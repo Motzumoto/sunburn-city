@@ -1,4 +1,4 @@
-// SUNBURN CITY - Handles player movement, pistol combat and draw state.
+// SUNBURN CITY — Handles player movement, pistol combat and draw state.
 // Player movement, pistol combat and the look state shared with the person painter.
 import { WORLD_SIZE } from '../core/config.js';
 import { clamp } from '../core/math.js';

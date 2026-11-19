@@ -1,4 +1,4 @@
-// SUNBURN CITY - Validates and persists local game progress.
+// SUNBURN CITY — Validates and persists local game progress.
 // Validated local save data for player progress and the current ride.
 import { MISSIONS } from './story.js';
 

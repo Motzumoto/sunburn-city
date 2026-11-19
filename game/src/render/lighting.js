@@ -1,4 +1,4 @@
-// SUNBURN CITY - Applies time-of-day tint, glow, grade and film grain.
+// SUNBURN CITY — Applies time-of-day tint, glow, grade and film grain.
 // Time-of-day lighting: world tint, golden-hour bloom, additive light pass, vignette and colour grade.
 import { LightList } from './lightSprites.js';
 import { hash2 } from '../core/math.js';

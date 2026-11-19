@@ -1,4 +1,4 @@
-// SUNBURN CITY - Draws cars, player highlights, lights and shadows.
+// SUNBURN CITY — Draws cars, player highlights, lights and shadows.
 // Draws extruded top-down cars: shadows, stacked body layers, glass, lights, police light bars and night glow.
 import { EXTRUDE, SHADOW_DIR } from '../core/config.js';
 import { shade, mix, roundRectPath } from './palette.js';

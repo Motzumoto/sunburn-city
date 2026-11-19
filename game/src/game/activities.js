@@ -1,4 +1,4 @@
-// SUNBURN CITY - Manages optional city activities and their markers.
+// SUNBURN CITY — Manages optional city activities and their markers.
 // Optional city activities and their persistent world markers.
 import { dist } from '../core/math.js';
 

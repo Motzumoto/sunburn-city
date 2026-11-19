@@ -1,4 +1,4 @@
-// SUNBURN CITY - Renders street, beach and waterfront props.
+// SUNBURN CITY — Renders street, beach and waterfront props.
 // Draws street and beach props: palms, trees, lamps, signals, benches, umbrellas, fountains, yachts and cranes.
 import { EXTRUDE } from '../core/config.js';
 import { palmCrown, treeCanopy, umbrellaSprite, SPRITE_SCALE, TOWEL_COLORS } from './spriteCache.js';

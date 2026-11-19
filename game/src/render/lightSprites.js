@@ -1,4 +1,4 @@
-// SUNBURN CITY - Caches additive light sprites and per-frame light pools.
+// SUNBURN CITY — Caches additive light sprites and per-frame light pools.
 // Cached additive light sprites and a capped per-frame list for warm and cool light pools.
 
 export const LIGHT = { WARM: 0, PINK: 1, CYAN: 2, PURPLE: 3, RED: 4, WHITE: 5, BLUE: 6, AMBER: 7, GREEN: 8, TEAL: 9 };

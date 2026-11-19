@@ -1,4 +1,4 @@
-// SUNBURN CITY - Renders the status HUD, wanted level, minimap and dialogue.
+// SUNBURN CITY — Renders the status HUD, wanted level, minimap and dialogue.
 // Screen-space status panels, wanted stars, radio, minimap and character dialogue.
 import { FONT_STACK, DISPLAY_STACK } from '../core/config.js';
 import { roundRectPath } from '../render/palette.js';
@@ -17,7 +17,7 @@ export class HUD {
     this.drawRadio(ctx, game, width);
     this.minimap.draw(ctx, game, width, height);
     if (game.player.inVehicle) this.drawSpeed(ctx, game.player.inVehicle, width, height);
-    if (game.dialogue) this.drawDialogue(ctx, game.dialogue, width, height);
+    if (game.dialogue) this.drawDialogue(ctx, game, game.dialogue, width, height);
     this.drawPrompt(ctx, game, width, height);
   }
 
@@ -148,7 +148,7 @@ export class HUD {
     bar(ctx, x + 13, y + 62, 126, 4, car.health / car.maxHealth, '#e98668');
   }
 
-  drawDialogue(ctx, dialogue, width, height) {
+  drawDialogue(ctx, game, dialogue, width, height) {
     const boxW = Math.min(760, width - 48);
     const x = (width - boxW) / 2;
     const compactShot = game.shotScene === 'mission';

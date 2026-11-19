@@ -1,4 +1,4 @@
-// SUNBURN CITY - Stages deterministic city, chase, mission and heist screenshots.
+// SUNBURN CITY — Stages deterministic city, chase, mission and heist screenshots.
 // Deterministic screenshot scenes assembled from the live city and entity systems.
 import { dist } from '../core/math.js';
 import { LIGHT } from '../render/lightSprites.js';
@@ -7,8 +7,8 @@ import { makeProp } from '../world/propsGen.js';
 import { shoreY } from '../world/shoreline.js';
 
 export const SHOT_NAMES = ['city', 'chase', 'mission', 'heist'];
-const SHOT_ZOOM = { city: 2.0, chase: 2.05, mission: 2.15, heist: 2.0 };
-const SHOT_OFFSET = { city: 40, chase: 60, mission: -25, heist: 20 };
+const SHOT_ZOOM = { city: 2.25, chase: 2.2, mission: 2.5, heist: 2.2 };
+const SHOT_OFFSET = { city: 34, chase: 28, mission: -10, heist: 28 };
 const TRAFFIC_COLORS = ['#7f8f93', '#3f6f74', '#c9b08a', '#59606e', '#8c5f52'];
 
 export function setShotScene(game, name) {
@@ -18,6 +18,7 @@ export function setShotScene(game, name) {
   game.shotScene = name;
   game.shotZoom = SHOT_ZOOM[name];
   game.shotCameraOffset = SHOT_OFFSET[name];
+  game.shotCameraOffsetX = name === 'heist' ? 36 : 0;
   game.shotProps.length = 0;
   game.traffic.cars.length = 0;
   game.pedestrians.people.length = 0;
@@ -50,7 +51,8 @@ export function setShotScene(game, name) {
   else if (name === 'mission') missionScene(game);
   else heistScene(game);
 
-  game.camera.snapTo(game.player.x, game.player.y - game.shotCameraOffset, game.shotZoom);
+  game.camera.snapTo(game.player.x + game.shotCameraOffsetX,
+    game.player.y - game.shotCameraOffset, game.shotZoom);
   game.camera.resize(game.width, game.height);
   game.terrain.prewarm(game.ctx, game.camera.view);
   game.update(1 / 60);
@@ -61,7 +63,7 @@ export function setShotScene(game, name) {
 function cityScene(game) {
   game.day.setHour(18 + 10 / 60);
   const x = 2500;
-  const y = shoreY(x) - 70;
+  const y = shoreY(x) - 115;
   const car = stagePlayerCar(game, 'sport', x, y, 0, '#ff4d3d');
   car.speed = 55;
   car.brakeLights = true;
@@ -71,7 +73,7 @@ function cityScene(game) {
   game.player.inVehicle = car;
   stageBoulevardTraffic(game, car, y);
   game.pedestrians.populate(game.player, 10, 470);
-  stageSidewalkCrowd(game, x, y, 10, 106);
+  stageSidewalkCrowd(game, x, y, 10, 82);
   for (let i = 0; i < 2; i++) {
     const side = i ? 1 : -1;
     const tableX = x + (i ? 150 : -150);
@@ -79,7 +81,11 @@ function cityScene(game) {
     game.shotProps.push(table);
     game.shotProps.push(makeProp('umbrella', tableX, y + side * 112, null, { v: i, h: 31 }));
   }
+  for (const offset of [-270, 270]) {
+    game.shotProps.push(makeProp('umbrella', x + offset, shoreY(x + offset) - 22, null, { h: 34 }));
+  }
   for (let i = 0; i < 4; i++) game.shotProps.push(makeProp('palm', x - 240 + i * 160, y - 148, null));
+  moveBoulevardPalms(game, x, y);
   for (let side = -1; side <= 1; side += 2) {
     game.shotProps.push(makeProp('signal', x + 244, y + side * 86, null, { h: 48, phase: 1 }));
     game.shotProps.push(makeProp('signal', x + 292, y + side * 86, null, { h: 48, phase: 0 }));
@@ -92,9 +98,9 @@ function cityScene(game) {
 
 function chaseScene(game) {
   game.day.setHour(21 + 40 / 60);
-  const lane = laneNear(game, 3970, 2860, (edge) => edge.dx > 0) || laneNear(game, 3970, 2860);
+  const lane = laneNear(game, 3970, 4120, (edge) => edge.dx > 0 && Math.abs(edge.dy) < 1);
   const x = lane ? lane.x : 3970;
-  const y = lane ? lane.y : 2860;
+  const y = lane ? lane.y : 4120;
   const angle = lane ? Math.atan2(lane.edge.dy, lane.edge.dx) : 0;
   const bx = Math.cos(angle);
   const by = Math.sin(angle);
@@ -107,12 +113,12 @@ function chaseScene(game) {
   game.player.inVehicle = car;
   game.player.face = angle;
   for (let i = 0; i < 2; i++) {
-    const back = i ? 62 : 34;
+    const back = i ? 52 : 26;
     const cruiser = game.police.addCruiser(x - bx * back, y - by * back, angle, true);
     cruiser.siren = i + 1;
     cruiser.speed = 192;
   }
-  const farTraffic = [[118, -24], [166, 24], [208, -54], [248, 54], [282, -24]];
+  const farTraffic = [[85, -40], [125, 40], [165, -40], [205, 40], [245, -40]];
   for (let i = 0; i < farTraffic.length; i++) {
     const [ahead, lane] = farTraffic[i];
     const traffic = game.traffic.addCar(i % 2 ? 'sedan' : 'coupe',
@@ -147,33 +153,31 @@ function chaseScene(game) {
 }
 
 function missionScene(game) {
-  game.day.setHour(21 + 20 / 60);
+  game.day.setHour(18 + 35 / 60);
   const pier = game.city.landmark('pier9');
   const anchorX = pier ? pier.x : 800;
   const anchorY = pier ? pier.y : 4530;
-  const spot = game.city.findWalkableNear(anchorX - 40, anchorY, 7);
+  const spot = game.city.findWalkableNear(anchorX, shoreY(anchorX) - 58, 7);
   game.player.x = spot.x;
   game.player.y = spot.y;
-  game.player.face = 0;
+  game.player.face = -Math.PI / 2;
   game.player.aim = -Math.PI / 2;
   game.player.aimLocked = true;
   game.player.armed = true;
   game.player.shotArmed = true;
   const pedestrianLook = { shirt: '#2f8f8f', sleeve: '#56b8ad', pants: '#263348', shoes: '#fff0cf', skin: '#d99b76', hair: '#211d2b', shades: null };
-  for (const [i, side] of [-1, 1].entries()) {
+  for (const [i, [dx, dy]] of [[-15, -14], [15, -14], [0, -20]].entries()) {
     game.pedestrians.people.push({
-      id: 'shot-pier-' + i, x: spot.x + side * 19, y: spot.y + 2, face: side * 0.9,
-      aim: side * 0.9, walk: 1.5, speed: 48, look: pedestrianLook, armed: false, punch: 0,
-      state: 'flee', sortY: spot.y + 4,
+      id: 'shot-pier-' + i, x: spot.x + dx, y: spot.y + dy, face: i === 1 ? 0.7 : -0.7,
+      aim: i === 1 ? 0.7 : -0.7, walk: 1.5, speed: 48, look: pedestrianLook, armed: false, punch: 0,
+      state: i < 2 ? 'flee' : 'idle', sortY: spot.y + dy + 2,
     });
   }
-  for (let i = 0; i < 5; i++) {
-    game.shotProps.push(makeProp('stringLights', spot.x - 185 + (i % 2) * 55, spot.y - 102 - Math.floor(i / 2) * 31, null,
-      { len: 150, sag: 17 }));
+  game.shotProps.push(makeProp('marketStall', spot.x + 64, spot.y - 6, null, { accent: '#ef7d63', len: 48 }));
+  for (let i = 0; i < 2; i++) {
+    game.shotProps.push(makeProp('stringLights', spot.x - 142 + i * 80, spot.y - 92, null, { len: 116, sag: 14 }));
   }
   addBillboard(game, spot.x - 155, spot.y - 155, 'PIER 9', '#ef7d63', 86);
-  addBillboard(game, spot.x + 120, spot.y - 150, 'TIDE CLUB', '#2f8f8f', 112);
-  addBillboard(game, spot.x - 45, spot.y - 185, 'MARISOL', '#ef7d63', 94);
   game.wantedSystem.setLevel(1);
   game.wanted = 1;
   game.objective = { title: 'THE BOARDWALK', text: 'Talk to Marisol about the missing ledger.' };
@@ -204,24 +208,25 @@ function heistScene(game) {
   game.wantedSystem.setLevel(5);
   game.wanted = 5;
   stageCoverCruisers(game, spot.x, spot.y - 68);
-  game.police.stageOfficers(3, spot.x, game.player.y - 32, Math.PI / 2, 28, game.player.x, game.player.y);
+  game.police.stageOfficers(3, game.player.x + 31, game.player.y - 8, Math.PI / 2, 7, game.player.x, game.player.y);
   for (const officer of game.police.officers) {
     const angle = Math.atan2(game.player.y - officer.y, game.player.x - officer.x);
     const mx = officer.x + Math.cos(angle) * 12;
     const my = officer.y + Math.sin(angle) * 12;
-    game.effects.muzzleFlash(mx, my, angle);
-    game.effects.glow(mx, my, 16, LIGHT.AMBER, 12);
+    game.effects.muzzleFlash(mx, my, angle, 8);
+    game.effects.glow(mx, my, 6, LIGHT.AMBER, 12);
     game.effects.casing(officer.x, officer.y, angle);
     game.effects.spark(mx, my, angle, 115);
-    game.effects.beam(mx, my, game.player.x, game.player.y - 28, 12, 4);
+    game.effects.beam(mx, my, mx + Math.cos(angle) * 16, my + Math.sin(angle) * 16, 2, 4);
     game.combat.fire(officer, angle, { x: mx, y: my, damage: 13, speed: 780 });
     officer.shootClock = 1.2;
   }
   const muzzle = muzzlePoint(game.player, game.player.muzzle);
-  game.effects.muzzleFlash(muzzle.x, muzzle.y, game.player.aim);
-  game.effects.glow(muzzle.x, muzzle.y, 18, LIGHT.AMBER, 12);
-  game.effects.beam(muzzle.x, muzzle.y, spot.x, spot.y - 64, 10, 4);
-  for (let i = 0; i < 8; i++) game.effects.smoke(spot.x - 110 + i * 31, spot.y - 62 - (i % 3) * 14, 0, -8, 10 + i);
+  game.effects.muzzleFlash(muzzle.x, muzzle.y, game.player.aim, 8);
+  game.effects.glow(muzzle.x, muzzle.y, 6, LIGHT.AMBER, 12);
+  game.effects.beam(muzzle.x, muzzle.y, muzzle.x + Math.cos(game.player.aim) * 16,
+    muzzle.y + Math.sin(game.player.aim) * 16, 2, 4);
+  for (let i = 0; i < 5; i++) game.effects.smoke(spot.x - 110 + i * 31, spot.y - 62 - (i % 3) * 14, 0, -8, 7 + i);
   for (let i = 0; i < 12; i++) game.effects.spark(spot.x - 130 + i * 24, spot.y - 95, -Math.PI / 2, 140);
   game.objective = { title: 'HIGH TIDE', text: 'Get clear of the plaza. The exits are closing.' };
   game.missionMarker = { x: anchorX, y: anchorY };
@@ -242,8 +247,10 @@ function laneNear(game, x, y, filter) {
 
 function stageBoulevardTraffic(game, playerCar, boulevardY) {
   const stagedTraffic = [
-    [150, -24, 0], [320, -24, 0], [220, 24, 0],
-    [-160, -24, 0], [-330, 24, 0], [150, -54, Math.PI], [-190, -54, Math.PI],
+    [85, -24, 0], [155, -24, 0], [225, -24, 0],
+    [-85, -24, 0], [-155, -24, 0],
+    [50, 24, Math.PI], [120, 24, Math.PI], [190, 24, Math.PI],
+    [-210, 50, Math.PI / 2], [240, 50, -Math.PI / 2],
   ];
   for (let i = 0; i < stagedTraffic.length; i++) {
     const [offset, lane, heading] = stagedTraffic[i];
@@ -261,20 +268,28 @@ function stageBoulevardTraffic(game, playerCar, boulevardY) {
 
 function stageSidewalkCrowd(game, x, y, count, offset) {
   const people = game.pedestrians.people;
+  const perSide = Math.ceil(count / 2);
   for (let i = 0; i < Math.min(count, people.length); i++) {
-    const row = Math.floor(i / 8);
-    const col = i % 8;
-    const side = row % 2 ? -1 : 1;
-    const spot = game.city.findWalkableNear(x - 250 + col * 70, y + side * offset, 6);
+    const sideIndex = i < perSide ? i : i - perSide;
+    const side = i < perSide ? -1 : 1;
+    const spot = game.city.findWalkableNear(x - (perSide - 1) * 58 + sideIndex * 116, y + side * offset, 6);
     const person = people[i];
     person.x = spot.x;
     person.y = spot.y;
-    person.targetX = spot.x + (col % 2 ? 22 : -22);
+    person.targetX = spot.x + (sideIndex % 2 ? 22 : -22);
     person.targetY = spot.y;
     person.sortY = spot.y + 2;
-    person.idle = 1 + (i % 4) * 0.4;
+    person.idle = 1 + (sideIndex % 4) * 0.4;
     person.state = 'idle';
     person.speed = 0;
+  }
+}
+
+function moveBoulevardPalms(game, x, y) {
+  for (const prop of game.city.props) {
+    if (prop.type !== 'palm' || Math.abs(prop.x - x) > 560 || Math.abs(prop.y - y) > 64) continue;
+    prop.y = y + (prop.y < y ? -92 : 92);
+    prop.sortY = prop.y - 24;
   }
 }
 
@@ -291,7 +306,7 @@ function stageCoverCruisers(game, x, y) {
   game.police.units.length = 0;
   for (let i = 0; i < 2; i++) {
     const side = i ? 1 : -1;
-    const cruiserX = x + side * 90;
+    const cruiserX = x + side * 76;
     const cruiserY = y + 20;
     const angle = Math.atan2(y + 42 - cruiserY, x - cruiserX);
     const cruiser = game.traffic.addCar('police', cruiserX, cruiserY, angle, '#fff0cf',

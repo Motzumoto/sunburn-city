@@ -1,4 +1,4 @@
-// SUNBURN CITY - Tracks keyboard, mouse and named game actions.
+// SUNBURN CITY — Tracks keyboard, mouse and named game actions.
 // Keyboard and mouse state plus named actions shared by driving, combat and menus.
 
 export const ACTION_KEYS = {

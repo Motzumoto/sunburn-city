@@ -1,4 +1,4 @@
-// SUNBURN CITY - Draws objective distance and the world-space mission marker.
+// SUNBURN CITY — Draws objective distance and the world-space mission marker.
 // Objective distance and the world-space mission marker.
 import { dist } from '../core/math.js';
 

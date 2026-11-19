@@ -1,4 +1,4 @@
-// SUNBURN CITY - Provides shared deterministic math helpers.
+// SUNBURN CITY — Provides shared deterministic math helpers.
 // Small math helpers shared by every system, including deterministic world detail.
 
 export const TAU = Math.PI * 2;

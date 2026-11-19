@@ -1,4 +1,4 @@
-// SUNBURN CITY - Builds building facades, roofs, details and signs.
+// SUNBURN CITY — Builds building facades, roofs, details and signs.
 // Turns each lot into a facade, extruded roof, rooftop detail and optional sign.
 import { EXTRUDE } from '../core/config.js';
 import { wallColors, shade, mix } from '../render/palette.js';

@@ -1,4 +1,4 @@
-// SUNBURN CITY - Runs patrols, pursuits, officers, hazards and police fire.
+// SUNBURN CITY — Runs patrols, pursuits, officers, hazards and police fire.
 // Live patrols, pursuit steering, foot arrests, gunfire, road hazards and the search helicopter.
 import { clamp, dist, lerpAngle } from '../core/math.js';
 

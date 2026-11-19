@@ -1,4 +1,4 @@
-// SUNBURN CITY - Constructs directed traffic lanes and intersections.
+// SUNBURN CITY — Constructs directed traffic lanes and intersections.
 // The lane network: directed lanes plus connector edges through each intersection.
 import { LANE_W } from '../core/config.js';
 

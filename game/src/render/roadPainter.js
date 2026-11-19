@@ -1,4 +1,4 @@
-// SUNBURN CITY - Paints road surfaces, markings and wet reflections.
+// SUNBURN CITY — Paints road surfaces, markings and wet reflections.
 // Paints asphalt with grain, medians, lane markings, stop lines, crosswalks, manholes and patches.
 import { LANE_W } from '../core/config.js';
 import { hash2, overlaps } from '../core/math.js';

@@ -1,4 +1,4 @@
-// SUNBURN CITY - Draws pooled visual effects and combat feedback.
+// SUNBURN CITY — Draws pooled visual effects and combat feedback.
 // Pooled visual effects: dust, tyre smoke, sparks, shell casings, muzzle flashes, tracers and skid marks.
 import { mulberry32 } from '../core/rng.js';
 import { LIGHT } from './lightSprites.js';
@@ -70,8 +70,8 @@ export class Effects {
     p.vr = (r() - 0.5) * 30;
   }
 
-  muzzleFlash(x, y, angle) {
-    const p = this.spawn(FX.FLASH, x, y, 0, 0, 0.07, 9 + this.rnd() * 5, 0);
+  muzzleFlash(x, y, angle, size = 9 + this.rnd() * 5) {
+    const p = this.spawn(FX.FLASH, x, y, 0, 0, 0.07, size, 0);
     p.rot = angle;
   }
 

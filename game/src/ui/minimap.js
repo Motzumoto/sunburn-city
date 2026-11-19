@@ -1,4 +1,4 @@
-// SUNBURN CITY - Draws the street map, landmarks and pursuit markers.
+// SUNBURN CITY — Draws the street map, landmarks and pursuit markers.
 // Compact street map with generated blocks, the shoreline and active pursuit markers.
 import { shoreY } from '../world/shoreline.js';
 import { roundRectPath } from '../render/palette.js';
@@ -125,9 +125,9 @@ export class Minimap {
     ctx.restore();
 
     ctx.fillStyle = '#aab4b4';
-    ctx.font = '600 9px "Segoe UI", Arial, sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText('100 WORLD UNITS', map.x + 6, map.y + 13);
+    ctx.font = '600 8px "Segoe UI", Arial, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('100 WORLD UNITS', map.x + map.w - 6, map.y + map.h - 6);
     ctx.strokeStyle = '#f5e8d0';
     ctx.lineWidth = 1.5;
     ctx.beginPath();

@@ -1,4 +1,4 @@
-// SUNBURN CITY - Owns the world, game state, simulation and Canvas renderer.
+// SUNBURN CITY — Owns the world, game state, simulation and Canvas renderer.
 // Owns the live world, state transitions, fixed-step simulation and ordered Canvas renderer.
 import { MAX_DPR } from '../core/config.js';
 import { Camera, ZOOM_IN_CAR, ZOOM_ON_FOOT } from '../core/camera.js';
@@ -89,6 +89,7 @@ export class Game {
     this.shotScene = null;
     this.shotZoom = 1.45;
     this.shotCameraOffset = 100;
+    this.shotCameraOffsetX = 0;
     this.shotCameraTarget = { x: 0, y: 0 };
     this.lightView = { left: 0, top: 0, right: 0, bottom: 0 };
     this.titleOrigin = { x: this.player.x, y: this.player.y };
@@ -194,7 +195,7 @@ export class Game {
     const input = this.input;
     if (this.shotScene) {
       this.effects.update(dt);
-      this.shotCameraTarget.x = this.player.x;
+      this.shotCameraTarget.x = this.player.x + this.shotCameraOffsetX;
       this.shotCameraTarget.y = this.player.y - this.shotCameraOffset;
       this.camera.targetZoom = this.shotZoom;
       this.camera.update(dt, this.shotCameraTarget, null, 0);
@@ -284,7 +285,7 @@ export class Game {
     const car = this.player.inVehicle;
     if (this.shotScene) {
       this.camera.targetZoom = this.shotZoom;
-      this.shotCameraTarget.x = this.player.x;
+      this.shotCameraTarget.x = this.player.x + this.shotCameraOffsetX;
       this.shotCameraTarget.y = this.player.y - this.shotCameraOffset;
       this.camera.update(dt, this.shotCameraTarget, null, 0);
     } else if (this.state === 'title') {
@@ -478,8 +479,9 @@ export class Game {
   drawObject(ctx, item) {
     const night = this.day.sky.night;
     if (item.kind === 'building') {
-      drawBuilding(ctx, item);
-      if (night > 0.01) drawBuildingNight(ctx, item, night, this.elapsed, this.lighting.lights);
+      const warmNight = this.shotScene === 'chase';
+      drawBuilding(ctx, item, warmNight);
+      if (night > 0.01) drawBuildingNight(ctx, item, night, this.elapsed, this.lighting.lights, warmNight);
     } else if (item.kind === 'prop') {
       drawProp(ctx, item, this.elapsed);
       if (night > 0.01) drawPropNight(ctx, item, night, this.elapsed, this.lighting.lights);

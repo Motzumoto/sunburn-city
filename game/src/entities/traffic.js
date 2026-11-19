@@ -1,4 +1,4 @@
-// SUNBURN CITY - Manages lane-following and staged traffic.
+// SUNBURN CITY — Manages lane-following and staged traffic.
 // Ambient lane-following traffic with distance keeping and deterministic staged traffic support.
 import { mulberry32 } from '../core/rng.js';
 import { clamp, dist } from '../core/math.js';

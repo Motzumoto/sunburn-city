@@ -1,4 +1,4 @@
-// SUNBURN CITY - Draws pedestrians, officers and the highlighted player.
+// SUNBURN CITY — Draws pedestrians, officers and the highlighted player.
 // Draws top-down people: pedestrians, cops and the player with walk cycle, bobbing, aimed pistol and punch.
 import { EXTRUDE, SHADOW_DIR } from '../core/config.js';
 

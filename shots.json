@@ -1,6 +1,6 @@
 [
   {
-    "_comment": "// SUNBURN CITY - Deterministic screenshot manifest.",
+    "_comment": "// SUNBURN CITY — Deterministic screenshot manifest.",
     "name": "1-city.jpg",
     "query": "?shot=city&seed=1"
   },

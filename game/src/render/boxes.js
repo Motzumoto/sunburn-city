@@ -1,4 +1,4 @@
-// SUNBURN CITY - Draws extruded box faces for buildings and props.
+// SUNBURN CITY — Draws extruded box faces for buildings and props.
 // Fake-3D box primitive: draws sunlit and shaded faces beneath an extruded roof.
 import { EXTRUDE } from '../core/config.js';
 

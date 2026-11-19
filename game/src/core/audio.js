@@ -1,4 +1,4 @@
-// SUNBURN CITY - Manages optional Web Audio playback.
+// SUNBURN CITY — Manages optional Web Audio playback.
 // Owns optional Web Audio playback without coupling sound to the renderer.
 import { createMusic } from '../audio/music.js';
 import { createSfx } from '../audio/sfx.js';

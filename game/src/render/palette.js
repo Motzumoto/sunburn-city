@@ -1,4 +1,4 @@
-// SUNBURN CITY - Provides cached colour parsing, shading and mixing helpers.
+// SUNBURN CITY — Provides cached colour parsing, shading and mixing helpers.
 // Colour helpers: hex parsing, shading and mixing that return CSS strings (cached by callers, not per frame).
 
 export const PALETTE = {

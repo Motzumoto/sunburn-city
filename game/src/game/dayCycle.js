@@ -1,4 +1,4 @@
-// SUNBURN CITY - Computes the game clock and changing sky colours.
+// SUNBURN CITY — Computes the game clock and changing sky colours.
 // Game clock and sky colour keyframes: dawn, sun-bleached noon, golden hour and night.
 import { smoothstep } from '../core/math.js';
 

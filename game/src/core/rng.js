@@ -1,4 +1,4 @@
-// SUNBURN CITY - Supplies seeded random numbers for repeatable world generation.
+// SUNBURN CITY — Supplies seeded random numbers for repeatable world generation.
 // Seeded pseudo random numbers keep the generated city and screenshot scenes deterministic.
 
 export function mulberry32(seed) {

@@ -1,4 +1,4 @@
-// SUNBURN CITY - Builds the beach, promenade and docks shoreline.
+// SUNBURN CITY — Builds the beach, promenade and docks shoreline.
 // The beachfront strip: sand beaches, the marina promenade and the docks quay.
 import { SIDEWALK_W, GROUND } from '../core/config.js';
 import { shoreY } from './shoreline.js';

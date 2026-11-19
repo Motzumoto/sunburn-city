@@ -1,4 +1,4 @@
-// SUNBURN CITY - Runs fixed-step simulation and frame rendering.
+// SUNBURN CITY — Runs fixed-step simulation and frame rendering.
 // Fixed-timestep game loop: updates at 60Hz and renders once per animation frame.
 import { FIXED_DT, MAX_FRAME_DT } from './config.js';
 

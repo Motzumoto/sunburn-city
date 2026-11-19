@@ -1,4 +1,4 @@
-// SUNBURN CITY - Paints world ground, shorelines, blocks and decals.
+// SUNBURN CITY — Paints world ground, shorelines, blocks and decals.
 // Paints chunk ground: sea and shallows, beach strips, city blocks with sidewalks, parks, plazas and decals.
 import { SIDEWALK_W } from '../core/config.js';
 import { hash2, overlaps } from '../core/math.js';

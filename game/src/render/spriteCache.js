@@ -1,4 +1,4 @@
-// SUNBURN CITY - Caches reusable palm, foliage and umbrella sprites.
+// SUNBURN CITY — Caches reusable palm, foliage and umbrella sprites.
 // Pre-rendered palm, foliage and umbrella sprites reused across every frame.
 import { mulberry32 } from '../core/rng.js';
 

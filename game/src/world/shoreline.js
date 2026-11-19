@@ -1,4 +1,4 @@
-// SUNBURN CITY - Defines the coastal shore curve and beach-road placement.
+// SUNBURN CITY — Defines the coastal shore curve and beach-road placement.
 // The southern coastline: a wavy shore curve, sea tests and beach-road placement.
 import { WORLD_SIZE } from '../core/config.js';
 

@@ -1,4 +1,4 @@
-// SUNBURN CITY - Places seeded health and armour pickups.
+// SUNBURN CITY — Places seeded health and armour pickups.
 // Seeded health and armour pickups are placed at walkable points in parks and plazas.
 export function createPickups(city, seed) {
   let state = (seed ^ 0x4c3a97b1) >>> 0;

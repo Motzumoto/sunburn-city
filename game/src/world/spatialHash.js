@@ -1,4 +1,4 @@
-// SUNBURN CITY - Provides a uniform-grid spatial index for city queries.
+// SUNBURN CITY — Provides a uniform-grid spatial index for city queries.
 // Uniform-grid spatial hash for fast building, prop and parked-car queries.
 
 export class SpatialHash {

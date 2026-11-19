@@ -1,4 +1,4 @@
-// SUNBURN CITY - Renders animated turquoise water, foam and sunlight.
+// SUNBURN CITY — Renders animated turquoise water, foam and sunlight.
 // Animated turquoise water: sun glitter, rolling foam lines and a moving sea sheen.
 import { hash2 } from '../core/math.js';
 import { shoreY, SHORE_BASE } from '../world/shoreline.js';

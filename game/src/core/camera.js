@@ -1,4 +1,4 @@
-// SUNBURN CITY - Follows the player and frames the world and screenshot scenes.
+// SUNBURN CITY — Follows the player and frames the world and screenshot scenes.
 // North-up follow camera: smooth tracking, mouse look-ahead, context zoom and shot framing.
 import { clamp, damp, hash2 } from './math.js';
 import { WORLD_SIZE } from './config.js';

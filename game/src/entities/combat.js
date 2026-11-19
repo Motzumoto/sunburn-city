@@ -1,4 +1,4 @@
-// SUNBURN CITY - Simulates player and police projectiles.
+// SUNBURN CITY — Simulates player and police projectiles.
 // Short-lived projectile simulation shared by the player's pistol and staged police fire.
 import { dist } from '../core/math.js';
 

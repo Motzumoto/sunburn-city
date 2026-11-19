@@ -1,4 +1,4 @@
-// SUNBURN CITY - Creates street furniture, palms and parked street cars.
+// SUNBURN CITY — Creates street furniture, palms and parked street cars.
 // Street furniture: prop factory plus sidewalk palms, trees, lamps, signals, benches and parked street cars.
 import { SIDEWALK_W } from '../core/config.js';
 

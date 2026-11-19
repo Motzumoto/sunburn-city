@@ -1,4 +1,4 @@
-// SUNBURN CITY - Renders building facades, roofs, signage and night lights.
+// SUNBURN CITY — Renders building facades, roofs, signage and night lights.
 // Draws extruded buildings: lit west face, shaded south face, windows, roofs, awnings, crowns and night lights.
 import { EXTRUDE } from '../core/config.js';
 import { drawBoxFaces } from './boxes.js';
@@ -10,11 +10,11 @@ const LIT_A = [5, 11, 3, 8, 6, 13, 4, 9];
 const LIT_B = [3, 9, 7, 12, 2, 10, 5, 8];
 const CROWN_TIERS = [[0.78, 0.1], [0.52, 0.09]];
 
-export function drawBuilding(ctx, b) {
+export function drawBuilding(ctx, b, warmNight = false) {
   if (b.type === 'container') { drawContainer(ctx, b); return; }
   const H = b.H;
   drawBoxFaces(ctx, b.x, b.y, b.w, b.h, 0, H,
-    b.bank ? '#eee5d5' : b.litCss, b.bank ? '#d9cfbd' : b.darkCss);
+    b.bank ? '#eee5d5' : b.litCss, b.bank ? '#d9cfbd' : warmNight ? '#958879' : b.darkCss);
   drawFacade(ctx, b, b.x, b.y, b.w, b.h, 0, H);
   // Ambient occlusion where the walls meet the ground.
   ctx.fillStyle = 'rgba(20,30,42,0.16)';
@@ -291,16 +291,16 @@ function drawContainer(ctx, b) {
 }
 
 // ---- night pass: lit windows, neon and beacons drawn after the darkness tint ----
-export function drawBuildingNight(ctx, b, night, time, lights) {
+export function drawBuildingNight(ctx, b, night, time, lights, warmNight = false) {
   if (b.type === 'container') return;
-  if (b.pitchX !== 0) litWindows(ctx, b, b.x, b.y, b.w, b.h, 0, b.H, night);
+  if (b.pitchX !== 0) litWindows(ctx, b, b.x, b.y, b.w, b.h, 0, b.H, night, warmNight);
   if (b.crown) {
     let z = b.H;
     for (const t of CROWN_TIERS) {
       const nw = b.w * t[0];
       const nh = b.h * t[0];
       const dz = b.H * t[1];
-      litWindows(ctx, b, b.x + (b.w - nw) / 2, b.y + (b.h - nh) / 2, nw, nh, z, z + dz, night);
+      litWindows(ctx, b, b.x + (b.w - nw) / 2, b.y + (b.h - nh) / 2, nw, nh, z, z + dz, night, warmNight);
       z += dz;
     }
     const sx = b.x + b.w / 2 + EXTRUDE.x * (z + 70);
@@ -320,11 +320,11 @@ export function drawBuildingNight(ctx, b, night, time, lights) {
   if (b.type === 'shop' || b.type === 'club') lights.add(b.x + b.w / 2, b.y + b.h + 10, 56, LIGHT.WARM, 0.22 * night);
 }
 
-function litWindows(ctx, b, x, y, w, h, z0, z1, night) {
+function litWindows(ctx, b, x, y, w, h, z0, z1, night, warmNight) {
   const pitch = b.pitchY;
   const n = floorCount(z0 + 6, z1 - 3, pitch);
   if (n < 1) return;
-  const bright = b.glass ? '#c9f3ff' : b.type === 'club' ? '#ff9ad8' : '#ffd890';
+  const bright = warmNight ? '#ffd890' : b.glass ? '#c9f3ff' : b.type === 'club' ? '#ff9ad8' : '#ffd890';
   ctx.globalAlpha = Math.min(0.95, night * 1.15);
   ctx.fillStyle = bright;
   ctx.strokeStyle = bright;

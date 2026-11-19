@@ -1,4 +1,4 @@
-// SUNBURN CITY - Draws rooftop signs and their night-time neon.
+// SUNBURN CITY — Draws rooftop signs and their night-time neon.
 // Rooftop signage: upright text plates with neon light after dark.
 import { FONT_STACK } from '../core/config.js';
 import { clamp } from '../core/math.js';
