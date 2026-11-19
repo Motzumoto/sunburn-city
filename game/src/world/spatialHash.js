@@ -1,4 +1,9 @@
-// Lightweight uniform spatial index for collisions and camera-visible neighborhoods.
+// Purpose: provide coarse spatial indexing for nearby entities.
+// Main exports: SpatialHash.
+// Inputs: entity positions and query coordinates.
+// Outputs: nearby entity lists.
+// Side effects: stores references until cleared or rebuilt.
+// Notes: this module has no visual output.
 export class SpatialHash {
   constructor(size = 180) { this.size = size; this.cells = new Map(); }
   clear() { this.cells.clear(); }
@@ -10,3 +15,9 @@ export class SpatialHash {
     return found;
   }
 }
+// Purpose: provide coarse spatial indexing for nearby entities.
+// Main exports: SpatialHash.
+// Inputs: entity positions and query coordinates.
+// Outputs: nearby entity lists.
+// Side effects: stores references until cleared or rebuilt.
+// Notes: this module has no visual output.

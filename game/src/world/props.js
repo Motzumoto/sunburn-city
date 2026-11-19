@@ -1,4 +1,9 @@
-// Reusable palms, rooftop details, beach umbrellas and waterfront greenery.
+// Purpose: place natural and rooftop props across the city.
+// Main exports: makeProps.
+// Inputs: generated blocks and a seeded random function.
+// Outputs: a flat list of prop records.
+// Side effects: consumes deterministic random values.
+// Notes: properties such as kind and size control local rendering.
 export function makeProps(blocks, random) {
   const props = [];
   for (let i = 0; i < 430; i++) {

@@ -1,4 +1,9 @@
-// Frame-readable keyboard and pointer controls for walking, driving and aiming.
+// Purpose: collect keyboard and pointer state once per frame.
+// Main exports: Input.
+// Inputs: browser keyboard, pointer and wheel events.
+// Outputs: held keys, pressed keys, direction and pointer state.
+// Side effects: installs browser event listeners.
+// Notes: endFrame clears transient pressed and wheel inputs.
 export class Input {
   constructor(canvas) {
     this.keys = new Set(); this.pressed = new Set(); this.mouse = { x: 0, y: 0, down: false, clicked: false, wheel: 0 };

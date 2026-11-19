@@ -1,4 +1,9 @@
-// Circular Costa Vela map with roads, nearby blips, player bearing and compass.
+// Purpose: draw a circular, player-centered city map.
+// Main exports: drawMinimap.
+// Inputs: context, entities, viewport and active mission.
+// Outputs: clipped roads, points of interest and compass pixels.
+// Side effects: mutates canvas clipping and transform state.
+// Notes: the minimap is fixed at width-105, y=112.
 import { ROAD_X, ROAD_Y } from '../world/roads.js';
 export function drawMinimap(ctx,player,cars,peds,width,police=[],mission=null){
   const x=width-105,y=112,r=77;ctx.save();ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.clip();ctx.fillStyle='#529a91';ctx.fillRect(x-r,y-r,r*2,r*2);

@@ -1,4 +1,9 @@
-// SUNBURN CITY — draw camera-culled street furniture and custom scene dressing.
+// Purpose: draw street furniture and staged scene dressing.
+// Main exports: drawProps.
+// Inputs: context, live game state and camera.
+// Outputs: scene-specific prop pixels.
+// Side effects: mutates canvas drawing state.
+// Notes: custom dressing is selected by shotScene.
 import { ROAD_X, ROAD_Y } from '../world/roads.js';
 export function drawProps(ctx,game,camera){
   const left=camera.x-650,right=camera.x+650,top=camera.y-500,bottom=camera.y+500,night=game.hour>19||game.hour<6,p=game.player;let poolCount=0;

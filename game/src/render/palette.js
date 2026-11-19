@@ -1,4 +1,9 @@
-// Costa Vela's warm golden-hour and cool midnight color ramps.
+// Purpose: expose reusable colors and hourly lighting ramps.
+// Main exports: COLORS, lightAt.
+// Inputs: hour number.
+// Outputs: named palette values and a lighting record.
+// Side effects: none.
+// Notes: hour values wrap to a 24-hour range.
 export const COLORS={sand:'#d9c39a',coral:'#ef7d63',teal:'#2f8f8f',shadow:'#1d3340',cream:'#fff0cf',road:'#363c42',sea:'#39aeb0'};
 export function lightAt(hour){
   const t=((hour%24)+24)%24;

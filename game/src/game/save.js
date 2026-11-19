@@ -1,4 +1,9 @@
-// Versioned local save for player progress and the continuing Costa Vela story.
+// Purpose: persist and restore the Costa Vela campaign.
+// Main exports: readSave, writeSave, applySave.
+// Inputs: browser localStorage, player state and progress.
+// Outputs: validated save data and persisted save success.
+// Side effects: reads and writes localStorage.
+// Notes: malformed saves are rejected independently of localStorage errors.
 const KEY='sunburn-city-save-v1';
 export function readSave(){try{const data=JSON.parse(localStorage.getItem(KEY)||'null');if(!data||data.version!==1||!Number.isFinite(data.money)||!Number.isInteger(data.progress))return null;return data;}catch{return null;}}
 export function writeSave(player,progress){try{localStorage.setItem(KEY,JSON.stringify({version:1,money:player.money,health:player.health,armor:player.armor,weapon:player.weapon,ammo:player.ammo,vehicle:player.vehicle?.name||null,progress,x:player.x,y:player.y}));return true;}catch{return false;}}

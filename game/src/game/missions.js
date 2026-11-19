@@ -1,4 +1,9 @@
-// Original six-job state machine for travel, holdouts, tails, chases and heists.
+// Purpose: own mission progress and completion rules.
+// Main exports: Missions.
+// Inputs: player state and frame delta.
+// Outputs: complete or failed events.
+// Side effects: adds rewards and advances mission progress.
+// Notes: heists move their target through staged positions.
 import { MISSIONS } from './data/missions.js';
 export class Missions {
   constructor(progress=0){this.progress=progress;this.active=null;this.elapsed=0;this.stage=0;this.completeBanner=0;this.failed='';}

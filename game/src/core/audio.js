@@ -1,4 +1,9 @@
-// Gesture-activated WebAudio sound bed; all Costa Vela tones are synthesized locally.
+// Purpose: synthesize effects and rotating radio beds.
+// Main exports: AudioEngine.
+// Inputs: start, mute and station commands plus tone parameters.
+// Outputs: WebAudio oscillators and a master gain.
+// Side effects: creates browser AudioContext resources.
+// Notes: radio intervals are replaced when the station changes.
 export class AudioEngine {
   constructor() { this.context = null; this.master = null; this.started = false; this.muted = false; this.volume = 0.35; this.stationTimer = 0; this.stationStep = 0; }
   start() {

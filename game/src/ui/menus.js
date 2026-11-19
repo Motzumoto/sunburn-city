@@ -1,4 +1,9 @@
-// Title, pause, map and game-over screens in a warm sun-bleached poster style.
+// Purpose: draw title, pause, map, controls and game-over screens.
+// Main exports: drawMenu.
+// Inputs: context, viewport, state, selection and progress.
+// Outputs: menu-specific overlay pixels.
+// Side effects: mutates canvas text and fill state.
+// Notes: progress is retained for existing menu API compatibility.
 export function drawMenu(ctx,width,height,state,selection=0,progress=0){
   ctx.fillStyle='rgba(7,25,34,.72)';ctx.fillRect(0,0,width,height);
   if(state==='title'){ctx.textAlign='center';ctx.fillStyle='#f4cf98';ctx.font='900 66px Georgia';ctx.fillText('SUNBURN',width/2,height*.30);ctx.fillStyle='#fff0d5';ctx.font='900 50px Georgia';ctx.fillText('CITY',width/2,height*.39);ctx.fillStyle='#ffae87';ctx.font='700 14px sans-serif';ctx.fillText('COSTA VELA  ·  PARADISE HAS A PRICE',width/2,height*.45);

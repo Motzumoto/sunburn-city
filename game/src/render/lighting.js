@@ -1,4 +1,9 @@
-// Atmospheric day/night tint, film vignette and reusable fine-grain overlay.
+// Purpose: apply final hour tint, vignette and grain.
+// Main exports: drawLighting.
+// Inputs: canvas context, viewport and hour.
+// Outputs: full-screen atmospheric overlays.
+// Side effects: caches one reusable grain pattern.
+// Notes: daylight and night gradients follow the palette module.
 import { lightAt } from './palette.js';
 let grainPattern=null;
 function getGrain(ctx){

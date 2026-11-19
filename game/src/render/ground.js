@@ -1,4 +1,9 @@
-// Painted streets, tiled sidewalks, waterfront edges and night-rain reflections.
+// Purpose: paint the city ground, streets and waterfront.
+// Main exports: drawGround.
+// Inputs: context, camera bounds, wet and pier flags.
+// Outputs: tiled and culling-aware ground pixels.
+// Side effects: mutates canvas path and fill state.
+// Notes: road and shoreline constants are shared with world generation.
 import { ROAD_X, ROAD_Y, STREETS } from '../world/roads.js';
 export function drawGround(ctx,camera,wet=false,pier=false){
   const left=camera.x-850,top=camera.y-620,right=camera.x+850,bottom=camera.y+620;

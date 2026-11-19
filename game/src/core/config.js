@@ -1,4 +1,9 @@
-// Shared Costa Vela simulation constants and the sun-bleached street palette.
+// Purpose: publish simulation dimensions and shared combat palettes.
+// Main exports: WIDTH, HEIGHT, STEP, PALETTE, WEAPONS.
+// Inputs: none; values are static Costa Vela configuration.
+// Outputs: immutable constants used across gameplay and rendering.
+// Side effects: none.
+// Notes: changing these values alters timing or world geometry.
 export const WIDTH = 4200;
 export const HEIGHT = 4200;
 export const STEP = 1 / 60;

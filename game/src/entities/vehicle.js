@@ -1,4 +1,9 @@
-// Vehicle templates, paint and per-car handling state for the Costa Vela streets.
+// Purpose: define vehicle templates and construct runtime cars.
+// Main exports: VEHICLES, createCar.
+// Inputs: position, angle, template index and police flag.
+// Outputs: normalized car records used by traffic and renderer.
+// Side effects: none.
+// Notes: police constructors override color and top speed.
 export const VEHICLES=[
  {name:'Solana GT',color:'#f06e58',maxSpeed:470,accel:1.04},
  {name:'Marina Classic',color:'#6db9ad',maxSpeed:360,accel:.87},

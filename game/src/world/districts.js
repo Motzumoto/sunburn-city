@@ -1,4 +1,9 @@
-// Named Costa Vela neighborhoods and their distinct architectural moods.
+// Purpose: describe named districts and neighborhood styles.
+// Main exports: DISTRICTS, districtAt.
+// Inputs: world coordinates.
+// Outputs: a district record or the default Old Town record.
+// Side effects: none.
+// Notes: boundaries are rectangular and inclusive at their edge.
 export const DISTRICTS = [
   { name: 'DOWNTOWN', x: 900, y: 450, w: 1320, h: 1150, color: '#91b7b3', style: 'glass' },
   { name: 'MARINA', x: 2500, y: 350, w: 1450, h: 1050, color: '#8ec6b5', style: 'deco' },

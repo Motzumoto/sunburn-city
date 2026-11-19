@@ -1,4 +1,9 @@
-// Deterministic footprints for Costa Vela's facades, plazas and signature rooftops.
+// Purpose: generate building footprints inside the road grid.
+// Main exports: makeBlocks.
+// Inputs: a seeded random function.
+// Outputs: a list of building records.
+// Side effects: consumes deterministic random values.
+// Notes: landmark footprints are appended after grid blocks.
 import { DISTRICTS } from './districts.js';
 import { ROAD_X, ROAD_Y } from './roads.js';
 export function makeBlocks(random) {
@@ -21,3 +26,9 @@ export function makeBlocks(random) {
   blocks.push({ x: 3470, y: 900, w: 105, h: 62, color: '#78b6a8', height: 18, style: 'deco', seed: .6, label: 'SUNSPRAY' });
   return blocks;
 }
+// Purpose: generate building footprints inside the road grid.
+// Main exports: makeBlocks.
+// Inputs: a seeded random function.
+// Outputs: a list of building records.
+// Side effects: consumes deterministic random values.
+// Notes: landmark footprints are appended after grid blocks.

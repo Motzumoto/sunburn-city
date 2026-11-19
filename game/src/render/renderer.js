@@ -1,4 +1,9 @@
-// Culls the city world, street furniture, live entities and final film lighting.
+// Purpose: compose the world, entities, HUD and final lighting.
+// Main exports: Renderer.
+// Inputs: canvas and the live game state.
+// Outputs: complete viewport pixels.
+// Side effects: owns resize listener and canvas transform.
+// Notes: world drawing uses the staged camera and zoom.
 import { drawGround } from './ground.js';
 import { drawBuildings } from './buildings.js';
 import { drawLighting } from './lighting.js';
@@ -11,26 +16,69 @@ export class Renderer {
   resize(){this.dpr=Math.min(2,window.devicePixelRatio||1);this.width=window.innerWidth;this.height=window.innerHeight;this.canvas.width=Math.round(this.width*this.dpr);this.canvas.height=Math.round(this.height*this.dpr);this.ctx.setTransform(this.dpr,0,0,this.dpr,0,0);}
   draw(game){
     const c=this.ctx,w=this.width,h=this.height,cam=game.camera;c.setTransform(this.dpr,0,0,this.dpr,0,0);c.fillStyle='#153940';c.fillRect(0,0,w,h);
-    c.save();c.translate(w/2,h/2);c.scale(cam.zoom,cam.zoom);c.translate(-cam.x,-cam.y);
-    drawGround(c,cam,game.shotScene==='chase',game.shotScene==='mission');drawBuildings(c,game.city.blocks,game.city.props,cam,game.hour);drawProps(c,game,cam);drawSceneAccents(c,game);
-    game.effects.draw(c,false);
-    for(const bullet of game.bullets){c.strokeStyle=bullet.owner==='police'?'#ff8b67':'#ffecba';c.lineWidth=3;c.beginPath();c.moveTo(bullet.x,bullet.y);c.lineTo(bullet.x-bullet.vx*.045,bullet.y-bullet.vy*.045);c.stroke();}
-    for(const enemy of game.enemies||[])if(enemy.health>0)drawEnemy(c,enemy);
-    for(const ped of game.peds)drawPed(c,ped);
-    if(game.shotContact)drawContact(c,game.shotContact);
-    for(const car of game.cars)drawCar(c,car,game.time,game.hour);
-    for(const car of game.police)drawCar(c,car,game.time,game.hour);
-    for(const officer of game.officers||[])drawOfficer(c,officer);
-    const mission=game.hud?.mission||game.missions?.active;
-    if(mission){const pulse=1+Math.sin(game.time*4)*.12;c.strokeStyle='#ffae78';c.lineWidth=4;c.beginPath();c.arc(mission.target.x,mission.target.y,24*pulse,0,Math.PI*2);c.stroke();c.fillStyle='rgba(255,157,101,.18)';c.beginPath();c.arc(mission.target.x,mission.target.y,19,0,Math.PI*2);c.fill();}
-    if(game.player.vehicle)drawCar(c,game.player.vehicle,game.time,game.hour,true);else drawPlayer(c,game.player);
-    game.effects.draw(c,true);
-    c.restore();drawLighting(c,w,h,game.hour,game.time);
-    if(game.state==='playing'||game.state==='map')drawHud(c,w,h,game.hud);
-    if(game.dialogue)drawDialogue(c,w,h,game.dialogue.character,game.dialogue.lines);
-    if(game.state!=='playing')drawMenu(c,w,h,game.state,game.selection,game.missions.progress);
-    if(game.state==='title')drawSunset(c,w,h,game.time);
+    drawWorldLayer(c,w,h,cam,game);
+    drawLighting(c,w,h,game.hour,game.time);
+    drawInterfaceLayer(c,w,h,game);
   }
+}
+function drawWorldLayer(ctx,width,height,camera,game){
+  ctx.save();
+  ctx.translate(width/2,height/2);
+  ctx.scale(camera.zoom,camera.zoom);
+  ctx.translate(-camera.x,-camera.y);
+  drawGround(ctx,camera,game.shotScene==='chase',game.shotScene==='mission');
+  drawBuildings(ctx,game.city.blocks,game.city.props,camera,game.hour);
+  drawProps(ctx,game,camera);
+  drawSceneAccents(ctx,game);
+  game.effects.draw(ctx,false);
+  drawBullets(ctx,game.bullets);
+  drawLivingWorld(ctx,game);
+  drawMissionMarker(ctx,game);
+  drawPlayerOrHeroVehicle(ctx,game);
+  game.effects.draw(ctx,true);
+  ctx.restore();
+}
+function drawInterfaceLayer(ctx,width,height,game){
+  if(game.state==='playing'||game.state==='map')drawHud(ctx,width,height,game.hud);
+  if(game.dialogue)drawDialogue(ctx,width,height,game.dialogue.character,game.dialogue.lines);
+  if(game.state!=='playing')drawMenu(ctx,width,height,game.state,game.selection,game.missions.progress);
+  if(game.state==='title')drawSunset(ctx,width,height,game.time);
+}
+function drawBullets(ctx,bullets){
+  for(const bullet of bullets){
+    ctx.strokeStyle=bullet.owner==='police'?'#ff8b67':'#ffecba';
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(bullet.x,bullet.y);
+    ctx.lineTo(bullet.x-bullet.vx*.045,bullet.y-bullet.vy*.045);
+    ctx.stroke();
+  }
+}
+function drawLivingWorld(ctx,game){
+  for(const enemy of game.enemies||[])if(enemy.health>0)drawEnemy(ctx,enemy);
+  for(const pedestrian of game.peds)drawPed(ctx,pedestrian);
+  if(game.shotContact)drawContact(ctx,game.shotContact);
+  for(const car of game.cars)drawCar(ctx,car,game.time,game.hour);
+  for(const cruiser of game.police)drawCar(ctx,cruiser,game.time,game.hour);
+  for(const officer of game.officers||[])drawOfficer(ctx,officer);
+}
+function drawMissionMarker(ctx,game){
+  const mission=game.hud?.mission||game.missions?.active;
+  if(!mission)return;
+  const pulse=1+Math.sin(game.time*4)*.12;
+  ctx.strokeStyle='#ffae78';
+  ctx.lineWidth=4;
+  ctx.beginPath();
+  ctx.arc(mission.target.x,mission.target.y,24*pulse,0,Math.PI*2);
+  ctx.stroke();
+  ctx.fillStyle='rgba(255,157,101,.18)';
+  ctx.beginPath();
+  ctx.arc(mission.target.x,mission.target.y,19,0,Math.PI*2);
+  ctx.fill();
+}
+function drawPlayerOrHeroVehicle(ctx,game){
+  if(game.player.vehicle)drawCar(ctx,game.player.vehicle,game.time,game.hour,true);
+  else drawPlayer(ctx,game.player);
 }
 function drawCar(c,car,time,hour=12,hero=false){
   c.save();c.translate(car.x,car.y);c.rotate(car.angle);c.scale(hero?1.62:1.28,hero?1.48:1.18);

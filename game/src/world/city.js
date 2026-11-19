@@ -1,4 +1,9 @@
-// Seeds Costa Vela's road plan, buildings, palms and discoverable landmarks.
+// Purpose: assemble the seeded Costa Vela world.
+// Main exports: City.
+// Inputs: an integer seed.
+// Outputs: blocks, props, landmarks and generated traffic storage.
+// Side effects: deterministic generation of random world content.
+// Notes: seed one is used for all official shot captures.
 import { mulberry32 } from '../core/rng.js';
 import { makeBlocks } from './blocks.js';
 import { makeProps } from './props.js';

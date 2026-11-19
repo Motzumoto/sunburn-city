@@ -1,4 +1,9 @@
-// Fast, short-lived projectile records for weapons, tracers and combat scenes.
+// Purpose: turn weapon settings into projectile records.
+// Main exports: shoot.
+// Inputs: player weapon state, bullet array and random source.
+// Outputs: appends one or more projectile records.
+// Side effects: mutates the supplied bullet array.
+// Notes: shotgun pellets use the spread and pellet count fields.
 import { WEAPONS } from '../core/config.js';
 export function shoot(player, bullets, random) {
   const weapon=WEAPONS[player.weapon], count=weapon.pellets||1;

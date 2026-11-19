@@ -1,4 +1,9 @@
-// Extruded facades with sunward shadows, window grids, neon, palms and roof detail.
+// Purpose: draw city building facades and roofside natural props.
+// Main exports: drawBuildings.
+// Inputs: canvas context, blocks, props, camera and current hour.
+// Outputs: camera-culled building and prop pixels.
+// Side effects: mutates canvas path, color and text state.
+// Notes: night windows and neon signs depend on current hour.
 const facadeColors=new Map();
 export function drawBuildings(ctx,blocks,props,camera,hour=12){
   const left=camera.x-900,right=camera.x+900,top=camera.y-700,bottom=camera.y+700,night=hour>19||hour<6;

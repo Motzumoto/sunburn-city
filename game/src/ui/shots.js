@@ -1,4 +1,9 @@
-// Deterministic Costa Vela screenshot scenes assembled from live game entities.
+// Purpose: stage deterministic named Costa Vela screenshots.
+// Main exports: stageShot.
+// Inputs: live game state and shot name.
+// Outputs: camera, entities and HUD configured for one composition.
+// Side effects: resets staged enemies, bullets, effects and dialogue.
+// Notes: shot names and their live-seed queries remain unchanged.
 import { createCar, VEHICLES } from '../entities/vehicle.js';
 import { DISTRICTS } from '../world/districts.js';
 

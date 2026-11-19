@@ -1,4 +1,9 @@
-// Capped flashes, tracers, casings, tire smoke, sparks and searchlight effects.
+// Purpose: update and draw transient visual effects.
+// Main exports: Effects.
+// Inputs: effect position, type, angle and lifetime.
+// Outputs: foreground and background Canvas compositing.
+// Side effects: mutates effect items and canvas state.
+// Notes: the item count is capped at 180 records.
 export class Effects {
   constructor(){this.items=[];}
   add(x,y,type='dust',angle=0,lifetime=null){

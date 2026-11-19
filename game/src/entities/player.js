@@ -1,4 +1,9 @@
-// Player movement, coastal combat, weapon inventory, health and vehicle transitions.
+// Purpose: control player movement, vehicles, weapons and health.
+// Main exports: Player.
+// Inputs: Input, Camera, city geometry and the fire callback.
+// Outputs: updated player and vehicle state.
+// Side effects: mutates inventory and game entities by callback.
+// Notes: movement collision rolls back the prior world position.
 import { WEAPONS } from '../core/config.js';
 export class Player {
   constructor() { this.x=1800; this.y=1700; this.vx=0; this.vy=0; this.angle=0; this.health=100; this.armor=35; this.money=1250; this.weapon=0; this.ammo=WEAPONS.map(w=>w.mag*5); this.mag=WEAPONS.map(w=>w.mag); this.reload=0; this.cooldown=0; this.vehicle=null; this.walk=0; this.invulnerable=0; }

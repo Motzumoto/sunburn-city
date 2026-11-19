@@ -1,4 +1,9 @@
-// SUNBURN CITY boot, fixed-step simulation, live entities and screenshot interface.
+// Purpose: bootstrap SUNBURN CITY and coordinate the fixed-step game.
+// Main exports: none; this module initializes the browser application.
+// Inputs: URL query parameters, canvas, saved progress and browser input.
+// Outputs: live game state, rendering loop and window.__sunburn interface.
+// Side effects: installs game and blur listeners and starts the animation loop.
+// Notes: shot mode disables normal simulation and advances only staged frames.
 import { STEP } from './core/config.js';
 import { mulberry32 } from './core/rng.js';
 import { Input } from './core/input.js';

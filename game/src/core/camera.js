@@ -1,4 +1,9 @@
-// Smooth world camera with gentle look-ahead, staged-shot zoom and bounded shake.
+// Purpose: track and constrain the world camera.
+// Main exports: Camera.
+// Inputs: target position, aim offset, driving state and frame time.
+// Outputs: updated camera x, y, zoom and shake values.
+// Side effects: mutates the instance used by the renderer.
+// Notes: staged shots set zoom and position directly.
 export class Camera {
   constructor() { this.x = 2100; this.y = 2100; this.zoom = 1; this.shake = 0; }
   update(target, aim, driving, dt) {
