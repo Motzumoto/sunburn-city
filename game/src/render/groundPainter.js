@@ -1,3 +1,4 @@
+// SUNBURN CITY - Paints world ground, shorelines, blocks and decals.
 // Paints chunk ground: sea and shallows, beach strips, city blocks with sidewalks, parks, plazas and decals.
 import { SIDEWALK_W } from '../core/config.js';
 import { hash2, overlaps } from '../core/math.js';
@@ -180,6 +181,17 @@ function paintBlock(ctx, b) {
   const y0 = b.y0 + SIDEWALK_W;
   const iw = w - SIDEWALK_W * 2;
   const ih = h - SIDEWALK_W * 2;
+  ctx.strokeStyle = 'rgba(94,77,52,0.34)';
+  ctx.lineWidth = 2.2;
+  ctx.strokeRect(x0 + 1, y0 + 1, iw - 2, ih - 2);
+  ctx.strokeStyle = 'rgba(255,240,207,0.65)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(x0 + 2, y0 + 2);
+  ctx.lineTo(x0 + iw - 2, y0 + 2);
+  ctx.moveTo(x0 + 2, y0 + 2);
+  ctx.lineTo(x0 + 2, y0 + ih - 2);
+  ctx.stroke();
   switch (b.kind) {
     case 'park': paintPark(ctx, b, x0, y0, iw, ih); break;
     case 'plaza': case 'landmark': paintPlaza(ctx, b, x0, y0, iw, ih); break;

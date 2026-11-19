@@ -1,4 +1,5 @@
-// Vehicle data: body specs, colours and the simple kinematic state shared by traffic, parked and staged cars.
+// SUNBURN CITY - Defines vehicle specs, colours and kinematic state.
+// Vehicle data: body specs, colours and the kinematic state shared by live and staged cars.
 import { approach, clamp, wrapAngle } from '../core/math.js';
 import { WORLD_SIZE } from '../core/config.js';
 import { FX } from '../render/effects.js';

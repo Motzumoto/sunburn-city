@@ -1,4 +1,5 @@
-// Sidewalk crowds, beachgoers, idle pairs and simple flee responses with small cash pickups.
+// SUNBURN CITY - Spawns and updates sidewalk crowds and pedestrians.
+// Sidewalk crowds, beachgoers, idle pairs and deterministic scene-ready pedestrians.
 import { mulberry32 } from '../core/rng.js';
 import { dist } from '../core/math.js';
 import { SIDEWALK_W } from '../core/config.js';

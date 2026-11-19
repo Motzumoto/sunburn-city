@@ -1,3 +1,5 @@
+// SUNBURN CITY - Advances missions through the live world and entities.
+// Mission progression uses the same live world and entities as free roam.
 import { dist } from '../core/math.js';
 import { MISSIONS } from './story.js';
 

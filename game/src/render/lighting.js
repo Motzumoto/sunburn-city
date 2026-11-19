@@ -1,11 +1,14 @@
+// SUNBURN CITY - Applies time-of-day tint, glow, grade and film grain.
 // Time-of-day lighting: world tint, golden-hour bloom, additive light pass, vignette and colour grade.
 import { LightList } from './lightSprites.js';
+import { hash2 } from '../core/math.js';
 
 export class Lighting {
   constructor() {
     this.lights = new LightList();
     this.vignette = null;
     this.gradeGradient = null;
+    this.grain = null;
     this.sizeKey = '';
   }
 
@@ -26,6 +29,20 @@ export class Lighting {
     g.fillStyle = grad;
     g.fillRect(0, 0, w, h);
     this.vignette = c;
+    const grain = document.createElement('canvas');
+    grain.width = 128;
+    grain.height = 128;
+    const grainCtx = grain.getContext('2d');
+    const pixels = grainCtx.createImageData(128, 128);
+    for (let i = 0; i < pixels.data.length; i += 4) {
+      const value = hash2(i, i >> 4, 1986) < 0.5 ? 0 : 255;
+      pixels.data[i] = value;
+      pixels.data[i + 1] = value;
+      pixels.data[i + 2] = value;
+      pixels.data[i + 3] = 255;
+    }
+    grainCtx.putImageData(pixels, 0, 0);
+    this.grain = grainCtx.createPattern(grain, 'repeat');
     const cg = document.createElement('canvas').getContext('2d');
     const lg = cg.createLinearGradient(0, 0, 0, h);
     lg.addColorStop(0, 'rgba(40,190,200,0.5)');
@@ -76,6 +93,15 @@ export class Lighting {
     ctx.globalCompositeOperation = 'soft-light';
     ctx.globalAlpha = 0.32;
     ctx.fillStyle = this.gradeGradient;
+    ctx.fillRect(0, 0, w, h);
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  applyFilmGrain(ctx, w, h) {
+    ctx.globalCompositeOperation = 'soft-light';
+    ctx.globalAlpha = 0.045;
+    ctx.fillStyle = this.grain;
     ctx.fillRect(0, 0, w, h);
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = 'source-over';

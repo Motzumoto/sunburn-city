@@ -1,4 +1,5 @@
-// Pre-rendered foliage and umbrella sprites, drawn once to offscreen canvases and reused every frame.
+// SUNBURN CITY - Caches reusable palm, foliage and umbrella sprites.
+// Pre-rendered palm, foliage and umbrella sprites reused across every frame.
 import { mulberry32 } from '../core/rng.js';
 
 export const SPRITE_SCALE = 2.5; // sprite pixels per world unit

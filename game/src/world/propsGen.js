@@ -1,3 +1,4 @@
+// SUNBURN CITY - Creates street furniture, palms and parked street cars.
 // Street furniture: prop factory plus sidewalk palms, trees, lamps, signals, benches and parked street cars.
 import { SIDEWALK_W } from '../core/config.js';
 
@@ -21,6 +22,11 @@ const PROP_DEFS = {
   busstop: { cw: 34, ch: 10, h: 24 },
   net: { r: 0, h: 22 },
   stall: { cw: 24, ch: 16, h: 22 },
+  cafeTable: { r: 0, h: 18 },
+  marketStall: { r: 0, h: 25 },
+  scooter: { r: 0, h: 13 },
+  stringLights: { r: 0, h: 0 },
+  billboard: { r: 0, h: 35 },
 };
 
 export function makeProp(type, x, y, rng, extra) {

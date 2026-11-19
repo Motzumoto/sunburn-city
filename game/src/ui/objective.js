@@ -1,3 +1,5 @@
+// SUNBURN CITY - Draws objective distance and the world-space mission marker.
+// Objective distance and the world-space mission marker.
 import { dist } from '../core/math.js';
 
 export function objectiveDistance(game) {

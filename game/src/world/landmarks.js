@@ -1,4 +1,5 @@
-// Named landmarks: Vela Tower, the bank, The Flamingo Hotel, Pier 9, Marina Bay and the two plazas.
+// SUNBURN CITY - Places named Costa Vela landmarks and signature props.
+// Named landmarks: Vela Tower, Costa Trust, the Flamingo Hotel, Pier 9 and Marina Bay.
 import { SIDEWALK_W, GROUND } from '../core/config.js';
 import { DISTRICT_BY_ID } from './districts.js';
 import { createBuilding } from './buildingGen.js';

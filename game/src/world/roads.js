@@ -1,4 +1,5 @@
-// Road grid generation: irregularly spaced named avenues and streets, their segments and intersections.
+// SUNBURN CITY - Generates the road grid, avenues and intersections.
+// Road grid generation: named avenues, streets, segments and intersections.
 import { LANE_W } from '../core/config.js';
 import { BEACH_ROAD_Y } from './shoreline.js';
 

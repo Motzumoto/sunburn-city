@@ -1,3 +1,5 @@
+// SUNBURN CITY - Validates and persists local game progress.
+// Validated local save data for player progress and the current ride.
 import { MISSIONS } from './story.js';
 
 const KEY = 'sunburn-city-save';

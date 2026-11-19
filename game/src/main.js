@@ -1,4 +1,5 @@
-// Static-browser entry point: deterministic seed, responsive canvas and the external screenshot bridge.
+// SUNBURN CITY - Initializes the browser game, seed, canvas and screenshot bridge.
+// Static-browser entry point: deterministic seed, responsive canvas and the unchanged screenshot bridge.
 import { Game } from './game/game.js';
 import { GameLoop } from './core/loop.js';
 

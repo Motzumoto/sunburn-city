@@ -1,3 +1,4 @@
+// SUNBURN CITY - Draws cars, player highlights, lights and shadows.
 // Draws extruded top-down cars: shadows, stacked body layers, glass, lights, police light bars and night glow.
 import { EXTRUDE, SHADOW_DIR } from '../core/config.js';
 import { shade, mix, roundRectPath } from './palette.js';
@@ -19,8 +20,12 @@ export function drawVehicleShadow(ctx, v) {
   ctx.save();
   ctx.translate(v.x + SHADOW_DIR.x * s.h * 1.5, v.y + SHADOW_DIR.y * s.h * 1.5);
   ctx.rotate(v.heading + v.slip);
+  ctx.fillStyle = 'rgba(29,51,64,0.12)';
+  ctx.beginPath();
+  ctx.ellipse(1, 2, s.l * 0.62, s.w * 0.78, 0, 0, Math.PI * 2);
+  ctx.fill();
   roundRectPath(ctx, -s.l / 2, -s.w / 2, s.l, s.w, 6);
-  ctx.fillStyle = 'rgba(30,24,72,0.3)';
+  ctx.fillStyle = 'rgba(29,51,64,0.27)';
   ctx.fill();
   ctx.restore();
 }
@@ -41,6 +46,18 @@ export function drawVehicle(ctx, v, time) {
   const c = v._c || (v._c = carColors(v.color));
   const L = s.l;
   const W = s.w;
+  if (v.isPlayerCar) {
+    ctx.save();
+    ctx.translate(v.x, v.y);
+    ctx.rotate(v.heading + v.slip);
+    ctx.fillStyle = 'rgba(255,246,225,0.55)';
+    ctx.shadowColor = 'rgba(255,246,225,0.7)';
+    ctx.shadowBlur = 12;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 26, 14, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
   // Wheels peek out below the body.
   ctx.save();
   ctx.translate(v.x, v.y);
@@ -82,7 +99,33 @@ export function drawVehicle(ctx, v, time) {
   ctx.fillStyle = v.brakeLights ? '#ff4a3c' : '#9e2b25';
   ctx.fillRect(-L / 2, -W / 2 + 1.4, 2.4, 3.8);
   ctx.fillRect(-L / 2, W / 2 - 5.2, 2.4, 3.8);
+  if (v.isPlayerCar) {
+    ctx.strokeStyle = '#fff6e2';
+    ctx.lineWidth = 2;
+    roundRectPath(ctx, -L / 2, -W / 2, L, W, 6.5);
+    ctx.stroke();
+  }
   ctx.restore();
+  if (v.isPlayerCar) {
+    ctx.save();
+    ctx.translate(v.x + EXTRUDE.x * s.h, v.y + EXTRUDE.y * s.h - W / 2 - 16);
+    ctx.strokeStyle = 'rgba(20,25,32,0.75)';
+    ctx.lineWidth = 3;
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-4, 2);
+    ctx.lineTo(0, -2);
+    ctx.lineTo(4, 2);
+    ctx.stroke();
+    ctx.strokeStyle = '#ff4d3d';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(-4, 2);
+    ctx.lineTo(0, -2);
+    ctx.lineTo(4, 2);
+    ctx.stroke();
+    ctx.restore();
+  }
 }
 
 function decorate(ctx, v, L, W, time) {

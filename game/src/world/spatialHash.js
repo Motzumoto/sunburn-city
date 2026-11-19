@@ -1,4 +1,5 @@
-// Uniform-grid spatial hash for fast rectangle queries over buildings, props and parked cars.
+// SUNBURN CITY - Provides a uniform-grid spatial index for city queries.
+// Uniform-grid spatial hash for fast building, prop and parked-car queries.
 
 export class SpatialHash {
   constructor(worldSize, cellSize = 256) {

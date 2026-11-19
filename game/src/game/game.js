@@ -1,3 +1,4 @@
+// SUNBURN CITY - Owns the world, game state, simulation and Canvas renderer.
 // Owns the live world, state transitions, fixed-step simulation and ordered Canvas renderer.
 import { MAX_DPR } from '../core/config.js';
 import { Camera, ZOOM_IN_CAR, ZOOM_ON_FOOT } from '../core/camera.js';
@@ -19,7 +20,7 @@ import { drawProp, drawPropNight } from '../render/props.js';
 import { drawPerson, drawPersonShadow } from '../render/people.js';
 import { drawVehicle, drawVehicleShadow, drawVehicleNight } from '../render/vehicles.js';
 import { drawWater } from '../render/water.js';
-import { paintShadows } from '../render/shadowPainter.js';
+import { paintShotBoulevard, paintWetReflections } from '../render/roadPainter.js';
 import { Effects } from '../render/effects.js';
 import { Lighting } from '../render/lighting.js';
 import { HUD } from '../ui/hud.js';
@@ -84,6 +85,11 @@ export class Game {
     this.footstepClock = 0;
     this.lastTyreSound = 0;
     this.renderScratch = [];
+    this.shotProps = [];
+    this.shotScene = null;
+    this.shotZoom = 1.45;
+    this.shotCameraOffset = 100;
+    this.shotCameraTarget = { x: 0, y: 0 };
     this.lightView = { left: 0, top: 0, right: 0, bottom: 0 };
     this.titleOrigin = { x: this.player.x, y: this.player.y };
     this.resize();
@@ -186,6 +192,15 @@ export class Game {
   update(dt) {
     this.elapsed += dt;
     const input = this.input;
+    if (this.shotScene) {
+      this.effects.update(dt);
+      this.shotCameraTarget.x = this.player.x;
+      this.shotCameraTarget.y = this.player.y - this.shotCameraOffset;
+      this.camera.targetZoom = this.shotZoom;
+      this.camera.update(dt, this.shotCameraTarget, null, 0);
+      input.endTick();
+      return;
+    }
     if (!this.audio.started && (input.pressed.size || input.mouse.leftPressed)) this.audio.start();
     this.screens.update(this);
 
@@ -267,7 +282,12 @@ export class Game {
       this.effects.shake = 0;
     }
     const car = this.player.inVehicle;
-    if (this.state === 'title') {
+    if (this.shotScene) {
+      this.camera.targetZoom = this.shotZoom;
+      this.shotCameraTarget.x = this.player.x;
+      this.shotCameraTarget.y = this.player.y - this.shotCameraOffset;
+      this.camera.update(dt, this.shotCameraTarget, null, 0);
+    } else if (this.state === 'title') {
       const target = { x: this.titleOrigin.x + Math.sin(this.elapsed * 0.11) * 70, y: this.titleOrigin.y + Math.cos(this.elapsed * 0.08) * 42 };
       this.camera.update(dt, target, null, 0);
     } else {
@@ -348,6 +368,8 @@ export class Game {
     this.lightView.right = view.right;
     this.lightView.bottom = view.bottom;
     this.terrain.draw(ctx, view, 2);
+    if (this.shotScene === 'city') paintShotBoulevard(ctx, this.player.x, this.player.y, 560);
+    if (this.shotScene === 'chase') paintWetReflections(ctx, this.city, view, this.day.sky.night, this.elapsed);
     drawWater(ctx, this.city, view, this.elapsed, this.day.sky.night);
     this.effects.drawGround(ctx, view);
     const objects = this.visibleObjects(view);
@@ -371,6 +393,7 @@ export class Game {
     this.lighting.applyGlow(ctx, this.canvas.width, this.canvas.height, this.day.sky);
     this.lighting.applyVignette(ctx, this.canvas.width, this.canvas.height, this.day.sky);
     this.lighting.applyGrade(ctx, this.canvas.width, this.canvas.height);
+    this.lighting.applyFilmGrain(ctx, this.canvas.width, this.canvas.height);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (this.state === 'title') this.drawTitle(ctx);
     else {
@@ -418,6 +441,7 @@ export class Game {
     }
     for (const p of this.pickups) if (p.active && p.x >= view.left - 20 && p.x <= view.right + 20 && p.y >= view.top - 20 && p.y <= view.bottom + 20) out.push(p);
     for (const p of this.missionEnemies) if (!p.down && p.x >= view.left - 30 && p.x <= view.right + 30 && p.y >= view.top - 30 && p.y <= view.bottom + 30) out.push(p);
+    for (const p of this.shotProps) if (p.x >= view.left - 220 && p.x <= view.right + 220 && p.y >= view.top - 220 && p.y <= view.bottom + 220) out.push(p);
     if (this.police.helicopter) out.push({ ...this.police.helicopter, kind: 'helicopter', sortY: this.police.helicopter.y - 20 });
     for (const hazard of this.police.hazards) out.push({ ...hazard, kind: 'hazard', sortY: hazard.y });
     if (!this.player.inVehicle) out.push(this.player.drawState());
@@ -430,12 +454,24 @@ export class Game {
     for (const item of out) {
       if (seen.has(item)) continue;
       seen.add(item);
+      if (this.shotScene && item.spec && !this.traffic.cars.includes(item)) continue;
       if (item.kind === 'building' || item.kind === 'prop') sorted.push(item);
       else if (item.spec && item.parked && !item.destroyed) sorted.push(item);
       else if (item.spec && this.traffic.cars.includes(item)) sorted.push(item);
       else if (item.look || item.kind === 'cash' || item.kind === 'pickup' || item.kind === 'helicopter' || item.kind === 'hazard') sorted.push(item);
     }
     sorted.sort((a, b) => a.sortY - b.sortY || (a.x || 0) - (b.x || 0));
+    const playerCar = this.player.inVehicle;
+    if (playerCar && playerCar.isPlayerCar) {
+      const band = Math.floor(playerCar.sortY / 32);
+      const index = sorted.indexOf(playerCar);
+      if (index >= 0) {
+        let end = index;
+        while (end + 1 < sorted.length && Math.floor(sorted[end + 1].sortY / 32) === band) end++;
+        sorted.splice(index, 1);
+        sorted.splice(end, 0, playerCar);
+      }
+    }
     return sorted;
   }
 

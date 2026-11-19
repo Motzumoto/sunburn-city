@@ -1,4 +1,5 @@
-// Keyboard and mouse state plus a small action layer so systems poll names like "sprint" instead of key codes.
+// SUNBURN CITY - Tracks keyboard, mouse and named game actions.
+// Keyboard and mouse state plus named actions shared by driving, combat and menus.
 
 export const ACTION_KEYS = {
   moveUp: ['KeyW', 'ArrowUp'],

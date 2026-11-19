@@ -1,4 +1,5 @@
-// Streams the static ground (roads, sidewalks, sand, water, shadows) as cached chunk canvases around the view.
+// SUNBURN CITY - Streams and caches static terrain chunks.
+// Streams static roads, tiled sidewalks, sand, water and shadows as cached terrain chunks.
 import { WORLD_SIZE, CHUNK, CHUNK_SCALE, CHUNK_MARGIN } from '../core/config.js';
 import { paintChunk } from './terrainPainter.js';
 

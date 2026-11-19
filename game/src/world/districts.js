@@ -1,4 +1,5 @@
-// The seven districts of Costa Vela: where they sit, their palettes and what gets built in them.
+// SUNBURN CITY - Defines district palettes, landmarks and building mixes.
+// The seven Costa Vela districts define their palettes, landmarks and building mixes.
 import { WORLD_SIZE } from '../core/config.js';
 
 export const DISTRICTS = [

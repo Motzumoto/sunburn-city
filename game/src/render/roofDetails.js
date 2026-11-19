@@ -1,4 +1,5 @@
-// Rooftop clutter: AC units, water tanks, helipads, pools, solar panels, antennas and roof gardens.
+// SUNBURN CITY - Draws rooftop machinery, gardens, helipads and antennas.
+// Rooftop clutter: AC units, water tanks, helipads, antennas and roof gardens.
 import { EXTRUDE } from '../core/config.js';
 import { drawSolidBox } from './boxes.js';
 import { roundRectPath } from './palette.js';

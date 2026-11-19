@@ -1,4 +1,5 @@
-// City blocks between roads: picks each block's use, splits it into lots and fills it with buildings and decals.
+// SUNBURN CITY - Generates city blocks, lots, buildings and ground decals.
+// City blocks between roads: assigns uses, lots, buildings and ground decals.
 import { SIDEWALK_W, GROUND } from '../core/config.js';
 import { createBuilding, pickBuildingType } from './buildingGen.js';
 import { makeProp } from './propsGen.js';

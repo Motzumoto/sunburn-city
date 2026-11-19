@@ -1,4 +1,13 @@
+// SUNBURN CITY - Provides cached colour parsing, shading and mixing helpers.
 // Colour helpers: hex parsing, shading and mixing that return CSS strings (cached by callers, not per frame).
+
+export const PALETTE = {
+  sand: '#d9c39a',
+  coral: '#ef7d63',
+  teal: '#2f8f8f',
+  shadow: '#1d3340',
+  cream: '#fff0cf',
+};
 
 export function hexToRgb(hex) {
   const h = hex.charAt(0) === '#' ? hex.slice(1) : hex;
@@ -26,7 +35,7 @@ export function mix(hexA, hexB, t) {
 
 // Shaded wall pair: sunlit west face is warmed, the south face is cooled and darkened.
 export function wallColors(hex) {
-  return { lit: mix(shade(hex, 0.12), '#ffe2a8', 0.16), dark: mix(shade(hex, -0.2), '#42617b', 0.16) };
+  return { lit: mix(shade(hex, 0.12), PALETTE.cream, 0.16), dark: mix(shade(hex, -0.2), PALETTE.shadow, 0.2) };
 }
 
 export function alpha(hex, a) {

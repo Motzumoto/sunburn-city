@@ -1,4 +1,5 @@
-// The southern coastline: a wavy shore curve, water tests and the beachfront strip kinds.
+// SUNBURN CITY - Defines the coastal shore curve and beach-road placement.
+// The southern coastline: a wavy shore curve, sea tests and beach-road placement.
 import { WORLD_SIZE } from '../core/config.js';
 
 export const SHORE_BASE = 4400;

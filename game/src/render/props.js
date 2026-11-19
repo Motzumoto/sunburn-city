@@ -1,3 +1,4 @@
+// SUNBURN CITY - Renders street, beach and waterfront props.
 // Draws street and beach props: palms, trees, lamps, signals, benches, umbrellas, fountains, yachts and cranes.
 import { EXTRUDE } from '../core/config.js';
 import { palmCrown, treeCanopy, umbrellaSprite, SPRITE_SCALE, TOWEL_COLORS } from './spriteCache.js';
@@ -26,6 +27,11 @@ export function drawProp(ctx, p, time) {
     case 'yacht': drawYacht(ctx, p, time); break;
     case 'crane': drawCrane(ctx, p); break;
     case 'busstop': drawBusStop(ctx, p); break;
+    case 'cafeTable': drawCafeTable(ctx, p); break;
+    case 'marketStall': drawMarketStall(ctx, p); break;
+    case 'scooter': drawScooter(ctx, p); break;
+    case 'stringLights': drawStringLights(ctx, p, time); break;
+    case 'billboard': drawBillboard(ctx, p); break;
     default: break;
   }
 }
@@ -331,6 +337,111 @@ function drawBusStop(ctx, p) {
   ctx.fillRect(p.x - w / 2 + EXTRUDE.x * 24, p.y - h / 2 + EXTRUDE.y * 24, w, 1.5);
 }
 
+function drawCafeTable(ctx, p) {
+  const topX = p.x + EXTRUDE.x * 18;
+  const topY = p.y + EXTRUDE.y * 18;
+  ctx.fillStyle = 'rgba(25,34,41,0.2)';
+  ctx.beginPath(); ctx.ellipse(p.x + 4, p.y + 5, 15, 8, 0, 0, 6.3); ctx.fill();
+  ctx.strokeStyle = '#584736';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(topX, topY + 9); ctx.stroke();
+  ctx.fillStyle = '#f6e8cd';
+  ctx.beginPath(); ctx.ellipse(topX, topY, 12, 8, 0, 0, 6.3); ctx.fill();
+  ctx.strokeStyle = '#9b6447';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.ellipse(topX, topY, 12, 8, 0, 0, 6.3); ctx.stroke();
+  ctx.fillStyle = p.accent || '#ef7d63';
+  ctx.fillRect(topX - 2, topY - 5, 4, 10);
+  ctx.fillStyle = '#fff0cf';
+  ctx.fillRect(topX - 2, topY - 1, 4, 2);
+}
+
+function drawMarketStall(ctx, p) {
+  const w = p.len || 42;
+  const x = p.x - w / 2;
+  const y = p.y - 13;
+  ctx.fillStyle = 'rgba(20,30,40,0.24)';
+  ctx.fillRect(x + 4, p.y + 3, w, 9);
+  ctx.fillStyle = '#76543b';
+  ctx.fillRect(x + 2, y + 9, w - 4, 15);
+  ctx.fillStyle = '#b77c48';
+  ctx.fillRect(x, y + 8, w, 3);
+  for (let i = 0; i < w; i += 8) {
+    ctx.fillStyle = ((i / 8) | 0) % 2 ? '#fff0cf' : (p.accent || '#ef7d63');
+    ctx.beginPath();
+    ctx.moveTo(x + i, y + 8);
+    ctx.lineTo(x + i + 2, y);
+    ctx.lineTo(Math.min(x + i + 8, x + w), y);
+    ctx.lineTo(Math.min(x + i + 8, x + w), y + 8);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.fillStyle = '#f6d69d';
+  ctx.fillRect(x + 5, y + 13, w - 10, 2);
+  ctx.fillStyle = '#29434a';
+  ctx.fillRect(x + 6, y + 18, w - 12, 2);
+}
+
+function drawScooter(ctx, p) {
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.rotate(p.rot || 0);
+  ctx.fillStyle = 'rgba(16,25,32,0.3)';
+  ctx.beginPath(); ctx.ellipse(2, 4, 14, 5, 0, 0, 6.3); ctx.fill();
+  ctx.fillStyle = '#1b2931';
+  ctx.beginPath(); ctx.arc(-9, 1, 3.2, 0, 6.3); ctx.arc(9, 1, 3.2, 0, 6.3); ctx.fill();
+  ctx.strokeStyle = p.accent || '#ef7d63';
+  ctx.lineWidth = 3.5;
+  ctx.beginPath(); ctx.moveTo(-9, 0); ctx.lineTo(-2, -3); ctx.lineTo(5, -2); ctx.lineTo(9, 0); ctx.stroke();
+  ctx.fillStyle = '#fff0cf';
+  ctx.fillRect(7, -4, 3, 2);
+  ctx.restore();
+}
+
+function drawStringLights(ctx, p, time) {
+  const length = p.len || 160;
+  const sag = p.sag || 16;
+  const count = Math.max(4, Math.floor(length / 24));
+  ctx.strokeStyle = 'rgba(35,42,45,0.8)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+  ctx.quadraticCurveTo(p.x + length / 2, p.y + sag, p.x + length, p.y);
+  ctx.stroke();
+  for (let i = 0; i <= count; i++) {
+    const t = i / count;
+    const x = p.x + length * t;
+    const y = p.y + sag * 2 * t * (1 - t);
+    ctx.strokeStyle = '#303d42';
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + 5); ctx.stroke();
+    ctx.fillStyle = Math.sin(time * 2 + i * 0.8) > -0.75 ? (i % 2 ? '#ffd78c' : '#ff9878') : '#9a7958';
+    ctx.beginPath(); ctx.arc(x, y + 7, 2, 0, 6.3); ctx.fill();
+  }
+}
+
+function drawBillboard(ctx, p) {
+  const w = p.len || 66;
+  const h = p.boardHeight || 20;
+  const x = p.x - w / 2 + EXTRUDE.x * p.h;
+  const y = p.y - h - 4 + EXTRUDE.y * p.h;
+  ctx.strokeStyle = '#39434b';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(p.x - w * 0.34, p.y); ctx.lineTo(p.x - w * 0.34, y + h);
+  ctx.moveTo(p.x + w * 0.34, p.y); ctx.lineTo(p.x + w * 0.34, y + h);
+  ctx.stroke();
+  ctx.fillStyle = '#172831';
+  ctx.fillRect(x, y, w, h);
+  ctx.fillStyle = p.accent || '#ef7d63';
+  ctx.fillRect(x + 2, y + 2, w - 4, h - 4);
+  ctx.fillStyle = '#fff0cf';
+  ctx.font = '900 ' + Math.max(7, Math.min(12, h * 0.48)) + 'px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(p.text || 'COSTA VELA', p.x + EXTRUDE.x * p.h, y + h / 2, w - 5);
+  ctx.textBaseline = 'alphabetic';
+}
+
 // ---- night pass ----
 export function drawPropNight(ctx, p, night, time, lights) {
   switch (p.type) {
@@ -349,6 +460,16 @@ export function drawPropNight(ctx, p, night, time, lights) {
     case 'fountain': lights.add(p.x, p.y, 44, LIGHT.TEAL, 0.3 * night); break;
     case 'yacht': lights.add(p.x, p.y - 8, 20, LIGHT.WARM, 0.5 * night); break;
     case 'crane': lights.add(p.x + EXTRUDE.x * p.h, p.y + EXTRUDE.y * p.h, 24, LIGHT.RED, (0.5 + 0.5 * Math.sin(time * 3)) * night); break;
+    case 'stringLights': {
+      const length = p.len || 160;
+      for (let i = 0; i <= Math.floor(length / 24); i++) {
+        const t = i / Math.floor(length / 24);
+        const y = p.y + (p.sag || 16) * 2 * t * (1 - t);
+        lights.add(p.x + length * t, y + 7, 20, i % 2 ? LIGHT.WARM : LIGHT.PINK, 0.38 * night);
+      }
+      break;
+    }
+    case 'billboard': lights.add(p.x, p.y - 10, 66, p.accent === '#2f8f8f' ? LIGHT.CYAN : LIGHT.PINK, 0.65 * night); break;
     default: break;
   }
 }

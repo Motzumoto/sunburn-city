@@ -1,4 +1,5 @@
-// Ambient lane-following traffic with distance keeping, intersection routes and a timed deadlock escape.
+// SUNBURN CITY - Manages lane-following and staged traffic.
+// Ambient lane-following traffic with distance keeping and deterministic staged traffic support.
 import { mulberry32 } from '../core/rng.js';
 import { clamp, dist } from '../core/math.js';
 import { Vehicle, CAR_COLORS } from './vehicle.js';

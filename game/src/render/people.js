@@ -1,10 +1,15 @@
+// SUNBURN CITY - Draws pedestrians, officers and the highlighted player.
 // Draws top-down people: pedestrians, cops and the player with walk cycle, bobbing, aimed pistol and punch.
 import { EXTRUDE, SHADOW_DIR } from '../core/config.js';
 
 const HAND_REACH = 9;
 
 export function drawPersonShadow(ctx, p) {
-  ctx.fillStyle = 'rgba(30,24,72,0.3)';
+  ctx.fillStyle = 'rgba(29,51,64,0.12)';
+  ctx.beginPath();
+  ctx.ellipse(p.x + SHADOW_DIR.x * 8, p.y + SHADOW_DIR.y * 8, 8, 5.2, 0.5, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(29,51,64,0.25)';
   ctx.beginPath();
   ctx.ellipse(p.x + SHADOW_DIR.x * 7, p.y + SHADOW_DIR.y * 7, 5.5, 3.6, 0.5, 0, Math.PI * 2);
   ctx.fill();
@@ -15,7 +20,7 @@ export function drawPerson(ctx, p) {
   if (p.player) {
     ctx.save();
     ctx.translate(p.x, p.y);
-    ctx.scale(1.3, 1.3);
+    ctx.scale(1.4, 1.4);
     ctx.translate(-p.x, -p.y);
     drawPersonSprite(ctx, p);
     ctx.restore();
@@ -45,10 +50,13 @@ function drawPersonSprite(ctx, p) {
     return;
   }
   if (p.player) {
-    ctx.fillStyle = 'rgba(255,235,205,0.28)';
+    ctx.fillStyle = 'rgba(255,246,225,0.42)';
+    ctx.shadowColor = 'rgba(255,246,225,0.55)';
+    ctx.shadowBlur = 8;
     ctx.beginPath();
     ctx.ellipse(p.x, p.y + 3, 11, 6, 0, 0, Math.PI * 2);
     ctx.fill();
+    ctx.shadowBlur = 0;
   }
   // Legs on the ground.
   ctx.save();
@@ -74,8 +82,8 @@ function drawPersonSprite(ctx, p) {
     ctx.beginPath(); ctx.ellipse(0, 0, 3.7, 6.2, 0, 0, 6.3); ctx.fill();
   }
   if (p.player) {
-    ctx.strokeStyle = '#17212b';
-    ctx.lineWidth = 1.3;
+    ctx.strokeStyle = '#fff6e2';
+    ctx.lineWidth = 1.6;
     ctx.stroke();
   }
   ctx.fillStyle = 'rgba(255,255,255,0.2)';
@@ -115,8 +123,8 @@ function drawPersonSprite(ctx, p) {
   ctx.fillStyle = look.skin;
   ctx.beginPath(); ctx.arc(hx, hy, 3.7, 0, 6.3); ctx.fill();
   if (p.player) {
-    ctx.strokeStyle = '#17212b';
-    ctx.lineWidth = 1.2;
+    ctx.strokeStyle = '#fff6e2';
+    ctx.lineWidth = 1.6;
     ctx.stroke();
   }
   ctx.fillStyle = look.hair;
@@ -132,6 +140,23 @@ function drawPersonSprite(ctx, p) {
   if (look.shades) {
     ctx.fillStyle = '#10131a';
     ctx.beginPath(); ctx.arc(hx + cf * 2.2, hy + sf * 2.2, 1.5, 0, 6.3); ctx.fill();
+  }
+  if (p.player) {
+    ctx.strokeStyle = 'rgba(20,25,32,0.75)';
+    ctx.lineWidth = 3;
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(p.x - 4, p.y - 13);
+    ctx.lineTo(p.x, p.y - 18);
+    ctx.lineTo(p.x + 4, p.y - 13);
+    ctx.stroke();
+    ctx.strokeStyle = '#ff4d3d';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(p.x - 4, p.y - 13);
+    ctx.lineTo(p.x, p.y - 18);
+    ctx.lineTo(p.x + 4, p.y - 13);
+    ctx.stroke();
   }
 }
 

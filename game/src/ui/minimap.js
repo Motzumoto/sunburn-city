@@ -1,4 +1,5 @@
-// Compact, always-filled street map with the generated blocks, shoreline and active pursuit markers.
+// SUNBURN CITY - Draws the street map, landmarks and pursuit markers.
+// Compact street map with generated blocks, the shoreline and active pursuit markers.
 import { shoreY } from '../world/shoreline.js';
 import { roundRectPath } from '../render/palette.js';
 
@@ -108,14 +109,13 @@ export class Minimap {
       ctx.beginPath();
       ctx.arc(px, py, radius, 0, Math.PI * 2);
       ctx.stroke();
-      let index = 0;
       for (const car of game.police.units) if (car.pursuit && !car.destroyed) {
-        blip(ctx, mapX(car.x), mapY(car.y), (index++ + Math.floor(game.elapsed * 5)) % 2 ? '#f34f55' : '#4b9dff');
+        blip(ctx, mapX(car.x), mapY(car.y), '#ff4d3d');
       }
       for (const officer of game.police.officers) if (!officer.down) {
-        blip(ctx, mapX(officer.x), mapY(officer.y), (index++ + Math.floor(game.elapsed * 5)) % 2 ? '#f34f55' : '#4b9dff');
+        blip(ctx, mapX(officer.x), mapY(officer.y), '#ff4d3d');
       }
-      if (game.police.helicopter) blip(ctx, mapX(game.police.helicopter.x), mapY(game.police.helicopter.y), '#54adff');
+      if (game.police.helicopter) blip(ctx, mapX(game.police.helicopter.x), mapY(game.police.helicopter.y), '#ff4d3d');
     }
 
     const playerX = mapX(game.player.x);
@@ -124,10 +124,10 @@ export class Minimap {
     arrow(ctx, playerX, playerY, game.player.face, '#fff3d4');
     ctx.restore();
 
-    ctx.fillStyle = '#f5e8d0';
-    ctx.font = '600 8px "Segoe UI", Arial, sans-serif';
+    ctx.fillStyle = '#aab4b4';
+    ctx.font = '600 9px "Segoe UI", Arial, sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText('100 WORLD UNITS', map.x + 6, map.y + map.h - 5);
+    ctx.fillText('100 WORLD UNITS', map.x + 6, map.y + 13);
     ctx.strokeStyle = '#f5e8d0';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -150,9 +150,9 @@ function arrow(ctx, x, y, angle, color) {
   ctx.translate(x, y);
   ctx.rotate(angle - Math.PI / 2);
   ctx.fillStyle = '#10202d';
-  ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(6, 6); ctx.lineTo(0, 3); ctx.lineTo(-6, 6); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(0, -9); ctx.lineTo(7, 7); ctx.lineTo(0, 3); ctx.lineTo(-7, 7); ctx.closePath(); ctx.fill();
   ctx.fillStyle = color;
-  ctx.beginPath(); ctx.moveTo(0, -6); ctx.lineTo(4, 4); ctx.lineTo(0, 2); ctx.lineTo(-4, 4); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(0, -7); ctx.lineTo(5, 5); ctx.lineTo(0, 2); ctx.lineTo(-5, 5); ctx.closePath(); ctx.fill();
   ctx.restore();
 }
 

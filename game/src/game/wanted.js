@@ -1,4 +1,5 @@
-// Heat, visibility-gated decay and the break-contact timer for the live police system.
+// SUNBURN CITY - Tracks police heat, visibility and pursuit decay.
+// Heat, visibility-gated decay and the break-contact timer for live police pursuits.
 export class WantedSystem {
   constructor() {
     this.heat = 0;

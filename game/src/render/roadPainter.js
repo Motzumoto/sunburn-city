@@ -1,3 +1,4 @@
+// SUNBURN CITY - Paints road surfaces, markings and wet reflections.
 // Paints asphalt with grain, medians, lane markings, stop lines, crosswalks, manholes and patches.
 import { LANE_W } from '../core/config.js';
 import { hash2, overlaps } from '../core/math.js';
@@ -55,6 +56,69 @@ export function paintMarkings(ctx, city, r) {
   }
 }
 
+export function paintWetReflections(ctx, city, r, night, time) {
+  if (night < 0.25) return;
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.globalAlpha = night * 0.28;
+  ctx.lineCap = 'round';
+  for (const s of city.segments) {
+    if (!overlaps(r, s.x0, s.y0, s.x1, s.y1)) continue;
+    const horizontal = s.axis === 'h';
+    const length = horizontal ? s.x1 - s.x0 : s.y1 - s.y0;
+    for (let k = 0; k < 5; k++) {
+      const seed = hash2(s.id, k, 861);
+      const along = 36 + seed * Math.max(40, length - 72);
+      const across = (hash2(k, s.id, 862) - 0.5) * (s.width - 18);
+      const span = 18 + hash2(s.id, k, 863) * 64;
+      const pulse = 0.72 + Math.sin(time * 2 + seed * 6.283) * 0.14;
+      ctx.strokeStyle = k % 3 ? 'rgba(111,210,220,0.55)' : 'rgba(255,133,106,0.6)';
+      ctx.globalAlpha = night * 0.28 * pulse;
+      ctx.lineWidth = 1.4 + seed * 2.4;
+      ctx.beginPath();
+      if (horizontal) {
+        ctx.moveTo(s.x0 + along, s.center + across);
+        ctx.lineTo(s.x0 + Math.min(length - 12, along + span), s.center + across + 1.2);
+      } else {
+        ctx.moveTo(s.center + across, s.y0 + along);
+        ctx.lineTo(s.center + across + 1.2, s.y0 + Math.min(length - 12, along + span));
+      }
+      ctx.stroke();
+    }
+  }
+  ctx.lineCap = 'butt';
+  ctx.restore();
+}
+
+export function paintShotBoulevard(ctx, centerX, centerY, halfLength) {
+  const left = centerX - halfLength;
+  const top = centerY - 78;
+  const width = halfLength * 2;
+  ctx.fillStyle = '#d9c39a';
+  ctx.fillRect(left, top - 8, width, 172);
+  ctx.fillStyle = '#39434b';
+  ctx.fillRect(left, top + 8, width, 140);
+  ctx.fillStyle = 'rgba(255,240,207,0.82)';
+  ctx.fillRect(left, top + 7, width, 2);
+  ctx.fillRect(left, top + 147, width, 2);
+  ctx.fillStyle = '#e6b753';
+  ctx.fillRect(left, centerY - 2, width, 2);
+  ctx.fillRect(left, centerY + 2, width, 2);
+  ctx.fillStyle = 'rgba(255,245,224,0.8)';
+  for (let x = left + 18; x < left + width; x += 74) {
+    ctx.fillRect(x, centerY - 46, 34, 2);
+    ctx.fillRect(x, centerY + 44, 34, 2);
+  }
+  const crossing = centerX + 220;
+  ctx.fillStyle = 'rgba(255,240,207,0.92)';
+  for (let y = top + 12; y < top + 140; y += 14) ctx.fillRect(crossing, y, 48, 7);
+  ctx.fillStyle = 'rgba(15,22,29,0.22)';
+  for (let x = left + 88; x < left + width - 32; x += 188) {
+    ctx.fillRect(x, top + 28, 22, 3);
+    ctx.fillRect(x + 54, top + 104, 36, 2);
+  }
+}
+
 function paintSegment(ctx, s) {
   const h = s.axis === 'h';
   const len = h ? s.x1 - s.x0 : s.y1 - s.y0;
@@ -105,6 +169,14 @@ function paintSegment(ctx, s) {
     ctx.stroke();
   }
 
+  // Pale raised curbs separate the asphalt from the parking and sidewalk edges.
+  ctx.strokeStyle = 'rgba(255,240,207,0.52)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  line(-s.width / 2 + 1, 0, len);
+  line(s.width / 2 - 1, 0, len);
+  ctx.stroke();
+
   // Crosswalks (zebra bars) and stop lines at both ends.
   ctx.fillStyle = WHITE;
   const edge = s.width / 2 - 5;
@@ -144,5 +216,23 @@ function paintSegment(ctx, s) {
     ctx.beginPath(); ctx.moveTo(px - 3, py); ctx.lineTo(px + 3, py); ctx.moveTo(px, py - 3); ctx.lineTo(px, py + 3);
     ctx.strokeStyle = 'rgba(120,128,142,0.45)';
     ctx.stroke();
+  }
+  if (len >= 180) {
+    ctx.fillStyle = '#28333a';
+    for (let k = 0; k < 2; k++) {
+      const along = 42 + hash2(s.id, k, 441) * (len - 84);
+      const across = (hash2(k, s.id, 442) - 0.5) * (s.width - 22);
+      if (h) {
+        ctx.fillRect(s.x0 + along, c + across, 12, 4);
+        ctx.fillStyle = 'rgba(205,216,211,0.38)';
+        ctx.fillRect(s.x0 + along + 1, c + across + 1, 10, 0.8);
+        ctx.fillStyle = '#28333a';
+      } else {
+        ctx.fillRect(c + across, s.y0 + along, 4, 12);
+        ctx.fillStyle = 'rgba(205,216,211,0.38)';
+        ctx.fillRect(c + across + 1, s.y0 + along + 1, 0.8, 10);
+        ctx.fillStyle = '#28333a';
+      }
+    }
   }
 }

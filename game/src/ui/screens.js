@@ -1,3 +1,5 @@
+// SUNBURN CITY - Renders the title, pause, briefing and end screens.
+// Title, pause, map, briefing and mission-result screens.
 import { DISTRICTS } from '../world/districts.js';
 import { hasSave, loadGame } from '../game/save.js';
 import { roundRectPath } from '../render/palette.js';

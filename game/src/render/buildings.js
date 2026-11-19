@@ -1,3 +1,4 @@
+// SUNBURN CITY - Renders building facades, roofs, signage and night lights.
 // Draws extruded buildings: lit west face, shaded south face, windows, roofs, awnings, crowns and night lights.
 import { EXTRUDE } from '../core/config.js';
 import { drawBoxFaces } from './boxes.js';
@@ -12,7 +13,8 @@ const CROWN_TIERS = [[0.78, 0.1], [0.52, 0.09]];
 export function drawBuilding(ctx, b) {
   if (b.type === 'container') { drawContainer(ctx, b); return; }
   const H = b.H;
-  drawBoxFaces(ctx, b.x, b.y, b.w, b.h, 0, H, b.litCss, b.darkCss);
+  drawBoxFaces(ctx, b.x, b.y, b.w, b.h, 0, H,
+    b.bank ? '#eee5d5' : b.litCss, b.bank ? '#d9cfbd' : b.darkCss);
   drawFacade(ctx, b, b.x, b.y, b.w, b.h, 0, H);
   // Ambient occlusion where the walls meet the ground.
   ctx.fillStyle = 'rgba(20,30,42,0.16)';
@@ -109,6 +111,7 @@ function floorCount(z0, z1, pitch) {
 // Window rows on both visible faces of a box section between heights z0 and z1.
 function drawFacade(ctx, b, x, y, w, h, z0, z1) {
   if (b.pitchX === 0) { warehouseFace(ctx, x, y, w, h, z0, z1); return; }
+  if (b.bank) { bankFacade(ctx, x, y, w, h, z0, z1); return; }
   const pitch = b.pitchY;
   const n = floorCount(z0 + 6, z1 - 3, pitch);
   if (n < 1) return;
@@ -126,6 +129,16 @@ function drawFacade(ctx, b, x, y, w, h, z0, z1) {
     const sy = y + h + EXTRUDE.y * z;
     ctx.moveTo(sx + 4, sy);
     ctx.lineTo(sx + w - 3, sy);
+  }
+  ctx.stroke();
+  // Vertical mullions turn the facade's horizontal window bands into a readable grid.
+  ctx.setLineDash([]);
+  ctx.strokeStyle = glass ? 'rgba(230,250,250,0.42)' : 'rgba(12,35,52,0.34)';
+  ctx.lineWidth = glass ? 1.1 : 0.85;
+  ctx.beginPath();
+  for (let fx = b.pitchX; fx < w - 3; fx += b.pitchX) {
+    ctx.moveTo(x + EXTRUDE.x * z0 + fx, y + h + EXTRUDE.y * z0);
+    ctx.lineTo(x + EXTRUDE.x * z1 + fx, y + h + EXTRUDE.y * z1);
   }
   ctx.stroke();
   // West face: slim vertical strips seen at a steep angle.
@@ -165,22 +178,6 @@ function drawFacade(ctx, b, x, y, w, h, z0, z1) {
     }
     ctx.stroke();
   }
-  if (b.bank && z0 === 0) bankColumns(ctx, b, x, y, w, h, z1);
-}
-
-function bankColumns(ctx, b, x, y, w, h, z1) {
-  ctx.strokeStyle = 'rgba(255,250,235,0.7)';
-  ctx.lineWidth = 3.2;
-  ctx.beginPath();
-  const n = Math.max(4, Math.floor(w / 18));
-  for (let k = 0; k <= n; k++) {
-    const fx = 6 + (k * (w - 12)) / n;
-    ctx.moveTo(x + fx, y + h);
-    ctx.lineTo(x + EXTRUDE.x * z1 * 0.55 + fx, y + h + EXTRUDE.y * z1 * 0.55);
-  }
-  ctx.stroke();
-  ctx.fillStyle = '#d9cdb4';
-  ctx.fillRect(x + EXTRUDE.x * z1 * 0.55 - 1, y + h + EXTRUDE.y * z1 * 0.55 - 5, w + 2, 5);
 }
 
 function warehouseFace(ctx, x, y, w, h, z0, z1) {
@@ -188,14 +185,76 @@ function warehouseFace(ctx, x, y, w, h, z0, z1) {
   const sy0 = y + h + EXTRUDE.y * z0;
   const sx1 = x + EXTRUDE.x * z1;
   const sy1 = y + h + EXTRUDE.y * z1;
-  ctx.fillStyle = 'rgba(255,255,255,0.12)';
-  ctx.fillRect(sx0, sy0 + (sy1 - sy0) * 0.55, w, 1.5);
-  ctx.fillStyle = 'rgba(255,245,220,0.18)';
-  ctx.fillRect(sx0, sy0 + (sy1 - sy0) * 0.55, w, 2);
-  ctx.strokeStyle = 'rgba(49,62,70,0.28)';
+  ctx.fillStyle = '#cfc7b6';
+  ctx.beginPath();
+  ctx.moveTo(sx0, sy0);
+  ctx.lineTo(sx0 + w, sy0);
+  ctx.lineTo(sx1 + w, sy1);
+  ctx.lineTo(sx1, sy1);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(70,66,58,0.14)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let k = 4; k < w; k += 9) {
+    ctx.moveTo(sx0 + k, sy0);
+    ctx.lineTo(sx1 + k, sy1);
+  }
+  ctx.stroke();
+  const bandZ = z0 + (z1 - z0) * 0.55;
+  const bandX = x + EXTRUDE.x * bandZ;
+  const bandY = y + h + EXTRUDE.y * bandZ;
+  ctx.strokeStyle = 'rgba(70,66,58,0.24)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(bandX, bandY);
+  ctx.lineTo(bandX + w, bandY);
+  ctx.stroke();
+  ctx.strokeStyle = 'rgba(49,45,39,0.5)';
   ctx.lineWidth = 0.8;
   ctx.beginPath();
-  for (let k = 8; k < w; k += 12) { ctx.moveTo(sx0 + k, sy0); ctx.lineTo(sx1 + k, sy1); }
+  ctx.moveTo(sx0, sy0);
+  ctx.lineTo(sx0 + w, sy0);
+  ctx.stroke();
+}
+
+function bankFacade(ctx, x, y, w, h, z0, z1) {
+  const start = z0 + 12;
+  const end = z1 - 8;
+  const count = Math.max(3, Math.floor(w / 28));
+  const spacing = w / count;
+  for (let i = 0; i < count; i++) {
+    const fx = spacing * i + spacing * 0.31;
+    const ww = spacing * 0.38;
+    const bx = x + EXTRUDE.x * start + fx;
+    const by = y + h + EXTRUDE.y * start;
+    const tx = x + EXTRUDE.x * end + fx;
+    const ty = y + h + EXTRUDE.y * end;
+    ctx.fillStyle = 'rgba(117,151,157,0.34)';
+    ctx.beginPath();
+    ctx.moveTo(bx, by);
+    ctx.lineTo(bx + ww, by);
+    ctx.lineTo(tx + ww, ty);
+    ctx.lineTo(tx, ty);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,250,235,0.65)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(bx + ww * 0.5, by);
+    ctx.lineTo(tx + ww * 0.5, ty);
+    ctx.moveTo(bx, by + (ty - by) * 0.55);
+    ctx.lineTo(bx + ww, by + (ty - by) * 0.55);
+    ctx.stroke();
+  }
+  ctx.strokeStyle = '#f4ead2';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  for (let i = 0; i <= count; i++) {
+    const fx = i * spacing;
+    ctx.moveTo(x + fx + EXTRUDE.x * z0, y + h + EXTRUDE.y * z0);
+    ctx.lineTo(x + fx + EXTRUDE.x * z1, y + h + EXTRUDE.y * z1);
+  }
   ctx.stroke();
 }
 

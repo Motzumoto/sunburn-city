@@ -1,4 +1,5 @@
-// Bakes long soft sun shadows of buildings, trees, poles and parked cars into a terrain chunk.
+// SUNBURN CITY - Bakes directional shadows into terrain chunks.
+// Bakes long directional sun shadows of buildings, trees, poles and parked cars into terrain.
 import { SHADOW_DIR, SHADOW_LEN } from '../core/config.js';
 
 const scratch = [];

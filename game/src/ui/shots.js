@@ -1,13 +1,24 @@
+// SUNBURN CITY - Stages deterministic city, chase, mission and heist screenshots.
 // Deterministic screenshot scenes assembled from the live city and entity systems.
 import { dist } from '../core/math.js';
+import { LIGHT } from '../render/lightSprites.js';
+import { muzzlePoint } from '../render/people.js';
 import { makeProp } from '../world/propsGen.js';
+import { shoreY } from '../world/shoreline.js';
 
 export const SHOT_NAMES = ['city', 'chase', 'mission', 'heist'];
+const SHOT_ZOOM = { city: 2.0, chase: 2.05, mission: 2.15, heist: 2.0 };
+const SHOT_OFFSET = { city: 40, chase: 60, mission: -25, heist: 20 };
+const TRAFFIC_COLORS = ['#7f8f93', '#3f6f74', '#c9b08a', '#59606e', '#8c5f52'];
 
 export function setShotScene(game, name) {
   if (!SHOT_NAMES.includes(name)) throw new Error('Unknown screenshot scene: ' + name);
   game.state = 'playing';
   game.day.frozen = true;
+  game.shotScene = name;
+  game.shotZoom = SHOT_ZOOM[name];
+  game.shotCameraOffset = SHOT_OFFSET[name];
+  game.shotProps.length = 0;
   game.traffic.cars.length = 0;
   game.pedestrians.people.length = 0;
   game.pedestrians.cash.length = 0;
@@ -16,12 +27,14 @@ export function setShotScene(game, name) {
   game.wantedSystem.setLevel(0);
   game.wanted = 0;
   game.missionMarker = null;
+  game.objectiveTarget = null;
   game.police.resetScene();
   game.dialogue = null;
   game.objective = null;
   game.player.inVehicle = null;
   game.player.shotArmed = false;
   game.player.aimLocked = false;
+  game.player.armed = false;
   game.player.health = 100;
   game.player.armour = 64;
   game.player.ammo = 12;
@@ -30,121 +43,141 @@ export function setShotScene(game, name) {
   game.player.face = 0;
   game.player.aim = 0;
   game.player.speed = 0;
+  game.radioStation = '';
 
   if (name === 'city') cityScene(game);
   else if (name === 'chase') chaseScene(game);
   else if (name === 'mission') missionScene(game);
   else heistScene(game);
 
-  game.camera.snapTo(game.player.x, game.player.y, game.player.inVehicle ? 0.82 : name === 'heist' ? 0.98 : 1.18);
+  game.camera.snapTo(game.player.x, game.player.y - game.shotCameraOffset, game.shotZoom);
   game.camera.resize(game.width, game.height);
   game.terrain.prewarm(game.ctx, game.camera.view);
   game.update(1 / 60);
+  game.wanted = game.wantedSystem.level;
   game.render(0, 1 / 60);
 }
 
 function cityScene(game) {
-  game.day.setHour(17.5);
-  const y = game.city.grid.ys[3];
-  const lane = laneNear(game, 2500, y, (edge) => edge.dx > 0) || laneNear(game, 2500, y);
-  const x = lane ? lane.x : 2500;
-  const py = lane ? lane.y : y + 34;
-  const car = stagePlayerCar(game, 'sport', x, py, 0, '#ff624e');
-  car.speed = 46;
+  game.day.setHour(18 + 10 / 60);
+  const x = 2500;
+  const y = shoreY(x) - 70;
+  const car = stagePlayerCar(game, 'sport', x, y, 0, '#ff4d3d');
+  car.speed = 55;
+  car.brakeLights = true;
   game.player.x = car.x;
   game.player.y = car.y;
   game.player.face = 0;
   game.player.inVehicle = car;
-  game.traffic.fillScene(car, 55, 460);
-  stageNearLanes(game, x, py, 8);
-  fillDenseScene(game, x, py, 52, 620);
-  game.pedestrians.populate(game.player, 75, 480);
-  for (let i = 0; i < 6; i++) {
-    const side = i < 3 ? -1 : 1;
-    const n = i % 3;
-    const sidewalk = game.city.findWalkableNear(x - 90 + n * 82, py + side * 108, 6);
-    const person = game.pedestrians.people[i];
-    if (person && sidewalk) {
-      person.x = sidewalk.x;
-      person.y = sidewalk.y;
-      person.targetX = sidewalk.x + (n - 1) * 55;
-      person.targetY = sidewalk.y + side * 14;
-      person.sortY = sidewalk.y + 2;
-    }
+  stageBoulevardTraffic(game, car, y);
+  game.pedestrians.populate(game.player, 10, 470);
+  stageSidewalkCrowd(game, x, y, 10, 106);
+  for (let i = 0; i < 2; i++) {
+    const side = i ? 1 : -1;
+    const tableX = x + (i ? 150 : -150);
+    const table = makeProp('cafeTable', tableX, y + side * 112, null, { accent: i ? '#3f6f74' : '#c9b08a' });
+    game.shotProps.push(table);
+    game.shotProps.push(makeProp('umbrella', tableX, y + side * 112, null, { v: i, h: 31 }));
   }
-  game.objective = { title: 'FREE ROAM', text: 'Take the long way along the coast.' };
-  game.radio = 'SUNSET DRIVE  ·  98.4';
+  for (let i = 0; i < 4; i++) game.shotProps.push(makeProp('palm', x - 240 + i * 160, y - 148, null));
+  for (let side = -1; side <= 1; side += 2) {
+    game.shotProps.push(makeProp('signal', x + 244, y + side * 86, null, { h: 48, phase: 1 }));
+    game.shotProps.push(makeProp('signal', x + 292, y + side * 86, null, { h: 48, phase: 0 }));
+  }
+  stageRoadSigns(game, x, y, ['OCEAN BOULEVARD', 'SOUTH BEACH'], ['#2f8f8f', '#ef7d63']);
+  game.objective = { title: 'SOUTH BEACH  ·  OCEAN BOULEVARD', text: 'Rush hour, headed for the water.' };
+  game.radio = 'PALM FM 88.4';
+  game.player.money = 18450;
 }
 
 function chaseScene(game) {
-  game.day.setHour(19.15);
+  game.day.setHour(21 + 40 / 60);
   const lane = laneNear(game, 3970, 2860, (edge) => edge.dx > 0) || laneNear(game, 3970, 2860);
   const x = lane ? lane.x : 3970;
   const y = lane ? lane.y : 2860;
   const angle = lane ? Math.atan2(lane.edge.dy, lane.edge.dx) : 0;
   const bx = Math.cos(angle);
   const by = Math.sin(angle);
-  const car = stagePlayerCar(game, 'coupe', x, y, angle, '#25a9a0');
+  const car = stagePlayerCar(game, 'coupe', x, y, angle, '#2fd6c8');
   car.speed = 214;
   car.slip = 0.08;
+  car.brakeLights = true;
   game.player.x = x;
   game.player.y = y;
   game.player.inVehicle = car;
   game.player.face = angle;
-  game.police.stagePursuit(2, x, y, angle, 80);
-  game.traffic.fillScene(car, 18, 620);
-  game.pedestrians.populate(game.player, 29, 560);
+  for (let i = 0; i < 2; i++) {
+    const back = i ? 62 : 34;
+    const cruiser = game.police.addCruiser(x - bx * back, y - by * back, angle, true);
+    cruiser.siren = i + 1;
+    cruiser.speed = 192;
+  }
+  const farTraffic = [[118, -24], [166, 24], [208, -54], [248, 54], [282, -24]];
+  for (let i = 0; i < farTraffic.length; i++) {
+    const [ahead, lane] = farTraffic[i];
+    const traffic = game.traffic.addCar(i % 2 ? 'sedan' : 'coupe',
+      x + bx * ahead - by * lane, y + by * ahead + bx * lane, angle,
+      TRAFFIC_COLORS[i % TRAFFIC_COLORS.length], { staged: true });
+    traffic.speed = 70;
+  }
   game.wantedSystem.setLevel(3);
   game.wanted = 3;
   game.objective = { title: 'WANTED  ·  NEON ROW', text: 'Lose the tail. Reach the marina.' };
-  const marina = game.city.landmark('marina');
-  if (marina) game.missionMarker = { x: marina.x, y: marina.y };
-  game.radio = 'POLICE BAND  ·  STATIC';
-  for (let i = 0; i < 34; i++) {
-    const d = 8 + i * 7;
+  game.missionMarker = game.city.landmark('marina');
+  game.radio = 'NEON TIDE 104.2';
+  addBillboard(game, x + 106, y - 120, 'VIVA', '#ff398f', 68);
+  addBillboard(game, x + 240, y + 72, 'MOTEL', '#44d9e8', 84);
+  addBillboard(game, x - 205, y - 88, 'FLAMINGO HOTEL', '#ff74a4', 132);
+  const roadblock = { x: x + bx * 230, y: y + by * 230, angle, type: 'roadblock' };
+  game.police.hazards.push(roadblock);
+  addBillboard(game, roadblock.x + 24, roadblock.y - 72, 'ROAD CLOSED', '#ef7d63', 102);
+  const heli = { x: x + 192, y: y - 205, angle: Math.atan2(y - (y - 205), x - (x + 192)), staged: true };
+  game.police.helicopter = heli;
+  game.effects.beam(heli.x, heli.y, x + 8, y + 44, 58, 40);
+  game.effects.glow(heli.x, heli.y, 27, LIGHT.BLUE, 40);
+  for (let i = 0; i < 38; i++) {
+    const d = 10 + i * 6;
     const sx = x - bx * d;
     const sy = y - by * d;
-    game.effects.skid(sx - 6, sy - 4, sx - bx * 9 - 6, sy - by * 9 - 4, 2.8);
-    game.effects.skid(sx + 6, sy + 4, sx - bx * 9 + 6, sy - by * 9 + 4, 2.8);
+    game.effects.skid(sx - 6, sy - 4, sx - bx * 10 - 6, sy - by * 10 - 4, 2.8);
+    game.effects.skid(sx + 6, sy + 4, sx - bx * 10 + 6, sy - by * 10 + 4, 2.8);
   }
-  for (let i = 0; i < 10; i++) game.effects.smoke(x - bx * (38 + i * 13), y - by * (38 + i * 13), -bx * 40, -by * 40, 8);
+  for (let i = 0; i < 10; i++) game.effects.smoke(x - bx * (32 + i * 12), y - by * (32 + i * 12), -bx * 40, -by * 40, 8 + i * 0.3);
+  for (let i = 0; i < 10; i++) game.effects.spark(x + bx * (32 + i * 8), y + by * (32 + i * 8), angle + Math.PI, 175);
 }
 
 function missionScene(game) {
-  game.day.setHour(21.3);
-  const strip = game.city.strips.find((item) => item.kind === 'beach' && 2250 >= item.x0 && 2250 <= item.x1) || game.city.strips[2];
-  const x = strip ? (strip.x0 + strip.x1) / 2 : 2450;
-  const y = strip ? strip.y0 + 56 : 4260;
-  const spot = game.city.findWalkableNear(x, y, 7);
-  if (!game.missionPier) {
-    game.city.addPier({ x0: spot.x + 126, x1: spot.x + 142, y0: spot.y + 128, y1: spot.y + 270 });
-    game.city.addProp(makeProp('lamp', spot.x + 127, spot.y + 155, null, { side: 'left' }));
-    game.city.addProp(makeProp('lamp', spot.x + 127, spot.y + 216, null, { side: 'left' }));
-    game.missionPier = true;
-  }
+  game.day.setHour(21 + 20 / 60);
+  const pier = game.city.landmark('pier9');
+  const anchorX = pier ? pier.x : 800;
+  const anchorY = pier ? pier.y : 4530;
+  const spot = game.city.findWalkableNear(anchorX - 40, anchorY, 7);
   game.player.x = spot.x;
   game.player.y = spot.y;
-  game.player.face = -0.22;
-  game.player.aim = -0.22;
+  game.player.face = 0;
+  game.player.aim = -Math.PI / 2;
+  game.player.aimLocked = true;
   game.player.armed = true;
   game.player.shotArmed = true;
-  game.player.aimLocked = true;
-  game.camera.snapTo(spot.x, spot.y, 1.18);
-  game.pedestrians.populate(game.player, 39, 440);
-  for (let i = 0; i < Math.min(3, game.pedestrians.people.length); i++) {
-    const person = game.pedestrians.people[i];
-    const away = game.city.findWalkableNear(spot.x + (i - 1) * 38, spot.y + 24, 6);
-    person.x = away.x;
-    person.y = away.y;
-    person.targetX = away.x + (i - 1) * 90;
-    person.targetY = away.y + 80;
-    person.state = 'flee';
-    person.flee = 3;
-    person.face = Math.atan2(person.targetY - person.y, person.targetX - person.x);
+  const pedestrianLook = { shirt: '#2f8f8f', sleeve: '#56b8ad', pants: '#263348', shoes: '#fff0cf', skin: '#d99b76', hair: '#211d2b', shades: null };
+  for (const [i, side] of [-1, 1].entries()) {
+    game.pedestrians.people.push({
+      id: 'shot-pier-' + i, x: spot.x + side * 19, y: spot.y + 2, face: side * 0.9,
+      aim: side * 0.9, walk: 1.5, speed: 48, look: pedestrianLook, armed: false, punch: 0,
+      state: 'flee', sortY: spot.y + 4,
+    });
   }
+  for (let i = 0; i < 5; i++) {
+    game.shotProps.push(makeProp('stringLights', spot.x - 185 + (i % 2) * 55, spot.y - 102 - Math.floor(i / 2) * 31, null,
+      { len: 150, sag: 17 }));
+  }
+  addBillboard(game, spot.x - 155, spot.y - 155, 'PIER 9', '#ef7d63', 86);
+  addBillboard(game, spot.x + 120, spot.y - 150, 'TIDE CLUB', '#2f8f8f', 112);
+  addBillboard(game, spot.x - 45, spot.y - 185, 'MARISOL', '#ef7d63', 94);
+  game.wantedSystem.setLevel(1);
+  game.wanted = 1;
   game.objective = { title: 'THE BOARDWALK', text: 'Talk to Marisol about the missing ledger.' };
-  const marker = game.city.landmark('pier9');
-  if (marker) game.missionMarker = { x: marker.x, y: marker.y };
+  game.missionMarker = pier || { x: anchorX, y: anchorY };
   game.dialogue = { name: 'MARISOL VEGA', lines: [
     'You said this was a clean job. The whole waterfront is talking.',
     'Meet me by the old lighthouse before the tide turns.',
@@ -153,41 +186,46 @@ function missionScene(game) {
 }
 
 function heistScene(game) {
-  game.day.setHour(13.1);
+  game.day.setHour(15.5);
   const bank = game.city.landmark('costa_trust');
-  const bx = bank ? bank.x : 2350;
-  const by = bank ? bank.y : 3500;
+  const anchorX = bank ? bank.x : 2350;
+  const anchorY = bank ? bank.y : 3500;
   const plaza = bank && bank.plaza;
-  const spot = game.city.findWalkableNear(bx, plaza ? (plaza.y0 + plaza.y1) / 2 : by + 110, 7);
+  const spot = game.city.findWalkableNear(anchorX, plaza ? (plaza.y0 + plaza.y1) / 2 : anchorY + 100, 7);
   game.player.x = spot.x;
-  game.player.y = spot.y;
+  game.player.y = spot.y + 42;
   game.player.face = -Math.PI / 2;
   game.player.aim = -Math.PI / 2;
   game.player.armed = true;
   game.player.shotArmed = true;
   game.player.aimLocked = true;
-  game.player.y = spot.y + 38;
-  game.camera.snapTo(game.player.x, game.player.y, 0.98);
-  const cover = game.traffic.addCar('sedan', spot.x, spot.y + 14, 0, '#344b60', { parked: true });
+  const cover = game.traffic.addCar('sedan', spot.x, spot.y + 14, 0, '#1d3340', { parked: true });
   cover.parked = true;
-  game.police.stagePursuit(2, spot.x, spot.y - 115, Math.PI / 2, 125);
-  game.police.stageOfficers(4, spot.x, spot.y - 90, Math.PI / 2, 38, game.player.x, game.player.y);
-  game.traffic.fillScene(game.player, 13, 620);
-  game.pedestrians.populate(game.player, 34, 500);
   game.wantedSystem.setLevel(5);
   game.wanted = 5;
+  stageCoverCruisers(game, spot.x, spot.y - 68);
+  game.police.stageOfficers(3, spot.x, game.player.y - 32, Math.PI / 2, 28, game.player.x, game.player.y);
   for (const officer of game.police.officers) {
     const angle = Math.atan2(game.player.y - officer.y, game.player.x - officer.x);
     const mx = officer.x + Math.cos(angle) * 12;
     const my = officer.y + Math.sin(angle) * 12;
     game.effects.muzzleFlash(mx, my, angle);
+    game.effects.glow(mx, my, 16, LIGHT.AMBER, 12);
     game.effects.casing(officer.x, officer.y, angle);
+    game.effects.spark(mx, my, angle, 115);
+    game.effects.beam(mx, my, game.player.x, game.player.y - 28, 12, 4);
     game.combat.fire(officer, angle, { x: mx, y: my, damage: 13, speed: 780 });
     officer.shootClock = 1.2;
   }
-  game.objective = { title: 'COSTA TRUST  ·  ALERT', text: 'Get clear of the plaza. The exits are closing.' };
-  game.missionMarker = { x: bx, y: by };
-  game.radio = 'DISPATCH  ·  ALL UNITS';
+  const muzzle = muzzlePoint(game.player, game.player.muzzle);
+  game.effects.muzzleFlash(muzzle.x, muzzle.y, game.player.aim);
+  game.effects.glow(muzzle.x, muzzle.y, 18, LIGHT.AMBER, 12);
+  game.effects.beam(muzzle.x, muzzle.y, spot.x, spot.y - 64, 10, 4);
+  for (let i = 0; i < 8; i++) game.effects.smoke(spot.x - 110 + i * 31, spot.y - 62 - (i % 3) * 14, 0, -8, 10 + i);
+  for (let i = 0; i < 12; i++) game.effects.spark(spot.x - 130 + i * 24, spot.y - 95, -Math.PI / 2, 140);
+  game.objective = { title: 'HIGH TIDE', text: 'Get clear of the plaza. The exits are closing.' };
+  game.missionMarker = { x: anchorX, y: anchorY };
+  game.radio = 'HIGH TIDE  ·  104.2';
 }
 
 function stagePlayerCar(game, type, x, y, angle, color) {
@@ -202,38 +240,65 @@ function laneNear(game, x, y, filter) {
   return lane && dist(lane.x, lane.y, x, y) < 280 ? lane : null;
 }
 
-function stageNearLanes(game, x, y, count) {
-  const edges = game.city.lanes.laneEdgesNear(x, y, 520, []);
-  for (let i = 0; i < Math.min(3, count); i++) {
-    const lane = game.city.nearestLane(x + 135 + i * 92, y, (edge) => edge.dx > 0);
-    if (!lane || game.traffic.cars.some((car) => dist(car.x, car.y, lane.x, lane.y) < 70)) continue;
-    game.traffic.addCar(i === 1 ? 'taxi' : 'sedan', lane.x, lane.y, Math.atan2(lane.edge.dy, lane.edge.dx));
+function stageBoulevardTraffic(game, playerCar, boulevardY) {
+  const stagedTraffic = [
+    [150, -24, 0], [320, -24, 0], [220, 24, 0],
+    [-160, -24, 0], [-330, 24, 0], [150, -54, Math.PI], [-190, -54, Math.PI],
+  ];
+  for (let i = 0; i < stagedTraffic.length; i++) {
+    const [offset, lane, heading] = stagedTraffic[i];
+    const car = game.traffic.addCar(i % 3 ? 'sedan' : 'coupe',
+      playerCar.x + offset, boulevardY + lane, heading, TRAFFIC_COLORS[i % TRAFFIC_COLORS.length], { staged: true });
+    car.speed = 48 + i * 3;
+    car.brakeLights = offset < 0;
   }
-  for (let i = 3; i < count && edges.length; i++) {
-    const edge = edges[(i * 7) % edges.length];
-    const t = 0.34 + (i % 4) * 0.1;
-    const px = edge.x0 + (edge.x1 - edge.x0) * t;
-    const py = edge.y0 + (edge.y1 - edge.y0) * t;
-    if (dist(px, py, x, y) < 110) continue;
-    game.traffic.addCar(i % 5 === 0 ? 'taxi' : 'sedan', px, py, Math.atan2(edge.dy, edge.dx));
+  for (let i = 0; i < 4; i++) {
+    const car = game.traffic.addCar(i % 2 ? 'sedan' : 'coupe', playerCar.x - 210 + i * 140,
+      boulevardY + (i % 2 ? -106 : 106), Math.PI / 2, TRAFFIC_COLORS[(i + 2) % TRAFFIC_COLORS.length], { parked: true });
+    car.staged = true;
   }
 }
 
-function fillDenseScene(game, x, y, target, radius) {
-  const edges = game.city.lanes.laneEdgesNear(x, y, radius, []);
-  for (const edge of edges) {
-    if (game.traffic.cars.length >= target) return;
-    if (edge.kind !== 'lane') continue;
-    for (let d = 48; d < edge.len - 24; d += 76) {
-      const t = d / edge.len;
-      const px = edge.x0 + (edge.x1 - edge.x0) * t;
-      const py = edge.y0 + (edge.y1 - edge.y0) * t;
-      if (dist(px, py, x, y) < 120 || dist(px, py, x, y) > radius || Math.abs(py - y) > 440 || Math.abs(px - x) > 760) continue;
-      if (game.traffic.cars.some((car) => dist(car.x, car.y, px, py) < 68)) continue;
-      if (game.city.blockedAt(px, py, 7)) continue;
-      const type = game.traffic.rnd() < 0.22 ? 'taxi' : game.traffic.rnd() < 0.5 ? 'coupe' : 'sedan';
-      game.traffic.addCar(type, px, py, Math.atan2(edge.dy, edge.dx));
-      if (game.traffic.cars.length >= target) return;
-    }
+function stageSidewalkCrowd(game, x, y, count, offset) {
+  const people = game.pedestrians.people;
+  for (let i = 0; i < Math.min(count, people.length); i++) {
+    const row = Math.floor(i / 8);
+    const col = i % 8;
+    const side = row % 2 ? -1 : 1;
+    const spot = game.city.findWalkableNear(x - 250 + col * 70, y + side * offset, 6);
+    const person = people[i];
+    person.x = spot.x;
+    person.y = spot.y;
+    person.targetX = spot.x + (col % 2 ? 22 : -22);
+    person.targetY = spot.y;
+    person.sortY = spot.y + 2;
+    person.idle = 1 + (i % 4) * 0.4;
+    person.state = 'idle';
+    person.speed = 0;
+  }
+}
+
+function stageRoadSigns(game, x, y, labels, colors) {
+  addBillboard(game, x - 320, y - 95, labels[0], colors[0], 102);
+  addBillboard(game, x + 310, y + 92, labels[1], colors[1], 106);
+}
+
+function addBillboard(game, x, y, text, accent, len) {
+  game.shotProps.push(makeProp('billboard', x, y, null, { text, accent, len, boardHeight: 22, h: 34 }));
+}
+
+function stageCoverCruisers(game, x, y) {
+  game.police.units.length = 0;
+  for (let i = 0; i < 2; i++) {
+    const side = i ? 1 : -1;
+    const cruiserX = x + side * 90;
+    const cruiserY = y + 20;
+    const angle = Math.atan2(y + 42 - cruiserY, x - cruiserX);
+    const cruiser = game.traffic.addCar('police', cruiserX, cruiserY, angle, '#fff0cf',
+      { parked: true, siren: i + 1, headlights: true });
+    cruiser.policeUnit = true;
+    cruiser.pursuit = false;
+    cruiser.brakeLights = true;
+    game.police.units.push(cruiser);
   }
 }

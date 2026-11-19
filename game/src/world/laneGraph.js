@@ -1,4 +1,5 @@
-// The lane network: one directed edge per lane per segment, plus connector edges through every intersection.
+// SUNBURN CITY - Constructs directed traffic lanes and intersections.
+// The lane network: directed lanes plus connector edges through each intersection.
 import { LANE_W } from '../core/config.js';
 
 export class LaneGraph {

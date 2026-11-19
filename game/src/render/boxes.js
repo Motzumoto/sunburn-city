@@ -1,4 +1,5 @@
-// Fake-3D box primitive: draws the sunlit west face, the shaded south face and the roof of an extruded block.
+// SUNBURN CITY - Draws extruded box faces for buildings and props.
+// Fake-3D box primitive: draws sunlit and shaded faces beneath an extruded roof.
 import { EXTRUDE } from '../core/config.js';
 
 // Draws the two visible side faces of a box from height z0 to z1. (x, y, w, h) is the ground footprint.

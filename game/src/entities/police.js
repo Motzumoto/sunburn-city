@@ -1,3 +1,4 @@
+// SUNBURN CITY - Runs patrols, pursuits, officers, hazards and police fire.
 // Live patrols, pursuit steering, foot arrests, gunfire, road hazards and the search helicopter.
 import { clamp, dist, lerpAngle } from '../core/math.js';
 
@@ -127,7 +128,7 @@ export class PoliceSystem {
     }
 
     if (level >= 4) this.updateHelicopter(dt);
-    else this.helicopter = null;
+    else if (!this.helicopter || !this.helicopter.staged) this.helicopter = null;
     if (level >= 3) this.updateHazards(dt);
     else this.hazards.length = 0;
     this.officers = this.officers.filter((person) => !person.down);

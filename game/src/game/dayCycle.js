@@ -1,4 +1,5 @@
-// Game clock and sky colour keyframes: dawn, noon, golden hour, dusk and a bright-enough night.
+// SUNBURN CITY - Computes the game clock and changing sky colours.
+// Game clock and sky colour keyframes: dawn, sun-bleached noon, golden hour and night.
 import { smoothstep } from '../core/math.js';
 
 // [hour, tintR, tintG, tintB, glow]: the tint multiplies the whole world, glow is the golden-hour bloom.
@@ -31,8 +32,9 @@ export class DayCycle {
   }
 
   clockText() {
-    const h = Math.floor(this.hour);
-    const m = Math.floor((this.hour - h) * 60);
+    const minutes = Math.round(this.hour * 60) % (24 * 60);
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
     const h12 = h % 12 === 0 ? 12 : h % 12;
     return h12 + ':' + (m < 10 ? '0' : '') + m + ' ' + (h < 12 ? 'AM' : 'PM');
   }

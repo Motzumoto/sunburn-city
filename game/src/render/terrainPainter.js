@@ -1,4 +1,5 @@
-// Paints one terrain chunk canvas by running the ground, road and shadow painters in order.
+// SUNBURN CITY - Composes terrain chunks from ground, roads and shadows.
+// Paints one terrain chunk canvas using the ground, road and shadow painters in order.
 import { CHUNK, CHUNK_SCALE, CHUNK_MARGIN } from '../core/config.js';
 import { paintBase, paintBlocks, paintStrips, paintPiers } from './groundPainter.js';
 import { paintAsphalt, paintMarkings } from './roadPainter.js';

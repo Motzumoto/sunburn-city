@@ -1,3 +1,5 @@
+// SUNBURN CITY - Stores the original Costa Vela cast, mission briefs and dialogue.
+// Original Costa Vela cast, mission briefs and dialogue.
 export const CHARACTERS = {
   rico: { name: 'RICO CALDER', color: '#e87057', hair: '#25232a', skin: '#bd805e', shirt: '#e87057', jacket: '#27394c', shape: 'square' },
   marisol: { name: 'MARISOL VEGA', color: '#43b9ae', hair: '#211d2b', skin: '#d99b76', shirt: '#43b9ae', jacket: '#234c50', shape: 'long' },

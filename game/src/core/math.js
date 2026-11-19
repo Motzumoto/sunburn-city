@@ -1,4 +1,5 @@
-// Small math helpers shared by every system: clamping, easing, angles and deterministic hashing.
+// SUNBURN CITY - Provides shared deterministic math helpers.
+// Small math helpers shared by every system, including deterministic world detail.
 
 export const TAU = Math.PI * 2;
 

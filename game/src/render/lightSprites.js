@@ -1,4 +1,5 @@
-// Cached additive light sprites (radial glows and headlight cones) and the per-frame light list that draws them.
+// SUNBURN CITY - Caches additive light sprites and per-frame light pools.
+// Cached additive light sprites and a capped per-frame list for warm and cool light pools.
 
 export const LIGHT = { WARM: 0, PINK: 1, CYAN: 2, PURPLE: 3, RED: 4, WHITE: 5, BLUE: 6, AMBER: 7, GREEN: 8, TEAL: 9 };
 const COLORS = [[255, 196, 120], [255, 70, 170], [40, 220, 255], [170, 100, 255], [255, 50, 40], [255, 248, 230],

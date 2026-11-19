@@ -1,3 +1,5 @@
+// SUNBURN CITY - Synthesizes the game's Costa Vela radio stations.
+// Three synthesized Costa Vela radio stations; no media files or network fetches.
 const STATIONS = [
   { name: 'SUNSET DRIVE · SYNTHWAVE', a: 110, b: 164.81, wave: 'sawtooth' },
   { name: 'COSTA SOL · GUITAR RADIO', a: 146.83, b: 196, wave: 'triangle' },
